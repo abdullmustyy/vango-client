@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction } from "@reduxjs/toolkit";
+// import { RootState } from "../app/store";
 
-const initialState = {
+export interface VansState {
+  filterOptions: { id: number; type: string; buttonStyle: string }[];
+}
+
+const initialState: VansState = {
   filterOptions: [],
 };
 
@@ -8,7 +14,10 @@ const vansSlice = createSlice({
   name: "vans",
   initialState,
   reducers: {
-    setFilterOptions(state, action) {
+    setFilterOptions(
+      state,
+      action: PayloadAction<{ id: number; type: string; buttonStyle: string }[]>
+    ) {
       state.filterOptions = action.payload;
     },
   },

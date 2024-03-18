@@ -7,6 +7,10 @@ import {
   query,
   where,
 } from "firebase/firestore/lite";
+import {
+  vansInterface,
+  vansDetailsInterface,
+} from "./utils/interfaces/vans.interface";
 
 const vansCollectionRef = collection(db, "vans");
 
@@ -15,14 +19,14 @@ export async function getVans() {
   const data = querySnapshot.docs.map((doc) => ({
     ...doc.data(),
     id: doc.id,
-  }));
+  })) as vansInterface[];
   const processedData = data.map((data) => {
     const buttonStyle =
       data.type === "simple"
         ? "bg-[#E17654] text-white hover:outline hover:outline-2 hover:outline-[#E17654]"
         : data.type === "luxury"
-        ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
-        : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
+          ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
+          : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
     return {
       ...data,
       buttonStyle: buttonStyle,
@@ -33,10 +37,10 @@ export async function getVans() {
   return processedData;
 }
 
-export async function getVanDetail(vanId) {
+export async function getVanDetail(vanId: string) {
   const vanRef = doc(db, "vans", vanId);
   const vanShot = await getDoc(vanRef);
-  let data = vanShot.data();
+  let data = vanShot.data() as vansDetailsInterface;
 
   data = {
     ...data,
@@ -44,8 +48,8 @@ export async function getVanDetail(vanId) {
       data.type === "simple"
         ? "[#E17654]"
         : data.type === "luxury"
-        ? "[#161616]"
-        : "[#115E59]",
+          ? "[#161616]"
+          : "[#115E59]",
     type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
   };
 
@@ -63,10 +67,10 @@ export async function getHostVans() {
   return data;
 }
 
-export async function getHostVanDetail(vanId) {
+export async function getHostVanDetail(vanId: string) {
   const hostVanRef = doc(db, "vans", vanId);
   const hostVanShot = await getDoc(hostVanRef);
-  let data = hostVanShot.data();
+  let data = hostVanShot.data() as vansDetailsInterface;
 
   data = {
     ...data,
@@ -74,15 +78,15 @@ export async function getHostVanDetail(vanId) {
       data.type === "simple"
         ? "[#E17654]"
         : data.type === "luxury"
-        ? "[#161616]"
-        : "[#115E59]",
+          ? "[#161616]"
+          : "[#115E59]",
     type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
   };
 
   return data;
 }
 
-export async function loginUser(creds) {
+export async function loginUser(creds: { email: string; password: string }) {
   const res = await fetch("/api/login", {
     method: "post",
     body: JSON.stringify(creds),

@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { Link, useLocation, useLoaderData, Await } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
 
 export default function VansDetailsPage() {
   const vanDetailsPromise = useLoaderData();
   const { state } = useLocation();
 
-  const renderVanDetails = (vanDetails) => (
+  const renderVanDetails = (vanDetails: vansDetailsInterface) => (
     <main className="my-10 grid sm:grid-cols-2 gap-10">
       <section className="md:my-8">
         <div
@@ -26,8 +27,12 @@ export default function VansDetailsPage() {
           >
             {vanDetails.type}
           </span>
-          <h2 className="md:text-[2.5rem] text-2xl font-bold">{vanDetails.name}</h2>
-          <span className="md:text-2xl text-xl font-bold">${vanDetails.price}/day</span>
+          <h2 className="md:text-[2.5rem] text-2xl font-bold">
+            {vanDetails.name}
+          </h2>
+          <span className="md:text-2xl text-xl font-bold">
+            ${vanDetails.price}/day
+          </span>
           <p className="text-base font-medium break-words sm:text-start text-center">
             {vanDetails.description}
           </p>
@@ -61,7 +66,11 @@ export default function VansDetailsPage() {
           <p className="text-xl font-bold my-12">Loading vans details ...</p>
         }
       >
-        <Await resolve={vanDetailsPromise.vanDetails}>{renderVanDetails}</Await>
+        <Await resolve={vanDetailsPromise}>
+          {(data: { vanDetails: vansDetailsInterface }) =>
+            renderVanDetails(data.vanDetails)
+          }
+        </Await>
       </Suspense>
     </section>
   );

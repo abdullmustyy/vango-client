@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import { Link, Await, useLoaderData } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
+import { vansInterface } from "../../utils/interfaces/vans.interface";
 
 export default function Dashboard() {
   const hostVansPromise = useLoaderData();
 
-  function renderVanElements(vans) {
+  function renderVanElements(vans: vansInterface[]) {
     const hostVansEls = vans.map((van) => (
       <div
         className="bg-white flex items-center gap-6 p-6 rounded-lg shadow-sm"
@@ -73,8 +74,10 @@ export default function Dashboard() {
               </h3>
             }
           >
-            <Await resolve={hostVansPromise.hostVans}>
-              {renderVanElements}
+            <Await resolve={hostVansPromise}>
+              {(data: { hostVans: vansInterface[] }) =>
+                renderVanElements(data.hostVans)
+              }
             </Await>
           </Suspense>
         </section>

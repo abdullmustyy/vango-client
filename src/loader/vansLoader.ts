@@ -5,6 +5,6 @@ export function vansPageLoader() {
   return defer({ vans: getVans() });
 }
 
-export function vanDetailPageLoader(vanId) {
-  return defer({ vanDetails: getVanDetail(vanId) });
+export function vanDetailPageLoader(vanId: string | undefined) {
+  return defer({ vanDetails: getVanDetail(vanId ?? "") });
 }

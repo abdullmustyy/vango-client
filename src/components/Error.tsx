@@ -3,7 +3,10 @@ import { FaFaceFrown } from "react-icons/fa6";
 import { useRouteError } from "react-router-dom";
 
 export default function Error() {
-  const error = useRouteError();
+  const error = useRouteError() as Error & {
+    status: number;
+    statusText: string;
+  };
   return (
     <section className="container mx-auto my-40 space-y-4 min-h-screen">
       <FaFaceFrown size={"3rem"} />

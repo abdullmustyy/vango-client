@@ -1,10 +1,11 @@
 import { Suspense } from "react";
 import { Link, useLoaderData, Await } from "react-router-dom";
+import { vansInterface } from "../../utils/interfaces/vans.interface";
 
 export default function HostVans() {
   const hostVansPromise = useLoaderData();
 
-  const renderHostVans = (hostVans) => (
+  const renderHostVans = (hostVans: vansInterface[]) => (
     <div className="grid grid-cols-1 gap-6 pt-6">
       {hostVans.map((vanData) => (
         <div
@@ -49,7 +50,11 @@ export default function HostVans() {
             </p>
           }
         >
-          <Await resolve={hostVansPromise.hostVans}>{renderHostVans}</Await>
+          <Await resolve={hostVansPromise}>
+            {(data: { hostVans: vansInterface[] }) =>
+              renderHostVans(data.hostVans)
+            }
+          </Await>
         </Suspense>
       </div>
     </section>

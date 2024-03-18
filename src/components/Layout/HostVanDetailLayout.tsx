@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Link, NavLink, Outlet, useLoaderData, Await } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
 
 export default function HostVanDetailLayout() {
   const hostVanDetailsPromise = useLoaderData();
@@ -10,7 +11,7 @@ export default function HostVanDetailLayout() {
     textDecoration: "underline",
   };
 
-  const renderHostVanDetails = (hostVanDetails) => (
+  const renderHostVanDetails = (hostVanDetails: vansDetailsInterface) => (
     <div className="bg-white p-8 mt-8 rounded-lg space-y-6">
       <div className="flex md:space-x-10 space-x-6">
         <div className="w-fit rounded-l-lg">
@@ -38,21 +39,21 @@ export default function HostVanDetailLayout() {
         <NavLink
           end
           to="."
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Details
         </NavLink>
         <NavLink
           to="pricing"
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Pricing
         </NavLink>
         <NavLink
           to="photos"
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Photos
@@ -82,8 +83,10 @@ export default function HostVanDetailLayout() {
             </p>
           }
         >
-          <Await resolve={hostVanDetailsPromise.hostVanDetails}>
-            {renderHostVanDetails}
+          <Await resolve={hostVanDetailsPromise}>
+            {(data: { hostVanDetails: vansDetailsInterface }) =>
+              renderHostVanDetails(data.hostVanDetails)
+            }
           </Await>
         </Suspense>
       </main>

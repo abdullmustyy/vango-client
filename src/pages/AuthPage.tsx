@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setError, setPageType } from "../state/authSlice";
 // Formik and Yup imports
 import * as Yup from "yup";
@@ -26,14 +27,17 @@ const authValues = {
 };
 
 export default function AuthPage() {
-  const { error, pageType } = useSelector((state) => state.auth);
+  const { error, pageType } = useAppSelector((state) => state.auth);
   const isSignIn = pageType === "signin";
   const isSignUp = pageType === "signup";
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  async function signUp({ email, password }, resetForm) {
+  async function signUp(
+    { email, password }: { email: string; password: string },
+    resetForm: () => void
+  ) {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -45,12 +49,15 @@ export default function AuthPage() {
       dispatch(setPageType("signin"));
     } catch (error) {
       console.log("Error", error);
-      const errorMessage = error.message;
+      const errorMessage = (error as Error).message;
       dispatch(setError(errorMessage));
     }
   }
 
-  async function signIn({ email, password }, resetForm) {
+  async function signIn(
+    { email, password }: { email: string; password: string },
+    resetForm: () => void
+  ) {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -64,17 +71,20 @@ export default function AuthPage() {
       });
     } catch (error) {
       console.log("Error", error);
-      const errorMessage = error.message;
+      const errorMessage = (error as Error).message;
       dispatch(setError(errorMessage));
     }
   }
 
-  async function handleSubmit(values, { resetForm, isSubmitting }) {
+  async function handleSubmit(
+    values: { email: string; password: string },
+    {
+      resetForm,
+      isSubmitting,
+    }: { resetForm: () => void; isSubmitting: boolean }
+  ) {
     console.log(isSubmitting);
     dispatch(setError(null));
-    // isSignIn
-    //   ? await signIn(values, resetForm)
-    //   : await signUp(values, resetForm);
     await signIn(values, resetForm);
   }
 
@@ -92,7 +102,7 @@ export default function AuthPage() {
         <Formik
           initialValues={authValues}
           validationSchema={authSchema}
-          onSubmit={async ({ email, password }, { resetForm }) => {
+          onSubmit={async ({ email, password }) => {
             const userCredential = await signInWithEmailAndPassword(
               auth,
               email,
@@ -107,11 +117,13 @@ export default function AuthPage() {
                 name="email"
                 type="email"
                 placeholder="Email address"
+                label="Email"
               />
               <MyTextInput
                 name="password"
                 type="password"
                 placeholder="Password"
+                label="Password"
               />
               {error && (
                 <h3 className="text-base text-center text-red-600 font-semibold">

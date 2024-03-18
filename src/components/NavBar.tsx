@@ -21,26 +21,29 @@ export default function NavBar() {
         <div className="flex space-x-6 items-center text-base font-semibold text-[#4D4D4D]">
           <NavLink
             to="host"
-            style={({ isActive }) => (isActive ? activeStyle : null)}
+            style={({ isActive }) => (isActive ? activeStyle : undefined)}
             className="hover:underline"
           >
             Host
           </NavLink>
           <NavLink
             to="about"
-            style={({ isActive }) => (isActive ? activeStyle : null)}
+            style={({ isActive }) => (isActive ? activeStyle : undefined)}
             className="hover:underline"
           >
             About
           </NavLink>
           <NavLink
             to="vans"
-            style={({ isActive }) => (isActive ? activeStyle : null)}
+            style={({ isActive }) => (isActive ? activeStyle : undefined)}
             className="hover:underline"
           >
             Vans
           </NavLink>
-          <button onClick={() => localStorage.setItem("isLoggedIn", false)}>
+          <button
+            type="button"
+            onClick={() => localStorage.setItem("isLoggedIn", "false")}
+          >
             Log Out
           </button>
         </div>

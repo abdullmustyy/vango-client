@@ -5,6 +5,6 @@ export function hostVansPageLoader() {
   return defer({ hostVans: getHostVans() });
 }
 
-export function hostVanDetailPageLoader(vanId) {
-  return defer({ hostVanDetails: getHostVanDetail(vanId) });
+export function hostVanDetailPageLoader(vanId: string | undefined) {
+  return defer({ hostVanDetails: getHostVanDetail(vanId ?? "") });
 }

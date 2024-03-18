@@ -1,17 +1,18 @@
 import { createContext, Suspense } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../app/hooks";
 import { useLoaderData, Await } from "react-router-dom";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
+import { vansInterface } from "../../utils/interfaces/vans.interface";
 
-export const VansContext = createContext();
+export const VansContext = createContext({} as { vansData: vansInterface[] });
 
 export default function VansPage() {
   const vansDataPromise = useLoaderData();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const renderVansData = (vansData) => {
+  const renderVansData = (vansData: vansInterface[]) => {
     const vansTypes = vansData.map((van, index) => ({
       id: index,
       type: van.type,
@@ -23,7 +24,7 @@ export default function VansPage() {
         const typeB = b.type.toUpperCase();
         return typeA < typeB ? -1 : typeA > typeB ? 1 : 0;
       })
-      .filter((data, index, arr) => data.type !== arr[index - 1]?.type);
+      .filter((data, index, arr) => data.type !== arr[index - 1]?.type)
     dispatch(setFilterOptions(options));
 
     return (
@@ -51,7 +52,9 @@ export default function VansPage() {
           <p className="text-xl font-bold mt-12">Loading vans data ...</p>
         }
       >
-        <Await resolve={vansDataPromise.vans}>{renderVansData}</Await>
+        <Await resolve={vansDataPromise}>
+          {(data: { vans: vansInterface[] }) => renderVansData(data.vans)}
+        </Await>
       </Suspense>
     </section>
   );

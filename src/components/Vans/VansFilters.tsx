@@ -1,9 +1,9 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../app/hooks";
 import { useSearchParams } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
 
 export default function VansFilters() {
-  const { filterOptions } = useSelector((state) => state.vans);
+  const { filterOptions } = useAppSelector((state) => state.vans);
   const [searchParams, setSearchParams] = useSearchParams();
   const typeFilter = Array.from(searchParams.values());
 
@@ -13,6 +13,7 @@ export default function VansFilters() {
         {filterOptions.map((option) => (
           <button
             key={option.id}
+            type="button"
             onClick={() => {
               setSearchParams((prevSearchParams) => {
                 !prevSearchParams.has(`type${option.id}`)
@@ -37,6 +38,7 @@ export default function VansFilters() {
       {typeFilter.length > 0 && (
         <>
           <button
+            type="button"
             onClick={() => {
               setSearchParams({});
             }}
@@ -45,10 +47,12 @@ export default function VansFilters() {
             Clear filters
           </button>
           <button
+            type="button"
             onClick={() => {
               setSearchParams({});
             }}
             className="hover:outline outline-[#a61414] outline-2 md:p-2 p-1 rounded-full text-white text-base font-medium bg-[#a61414] transition sm:hidden block"
+            title="Clear filters"
           >
             <FaXmark />
           </button>

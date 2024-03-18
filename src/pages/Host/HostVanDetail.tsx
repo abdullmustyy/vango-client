@@ -1,7 +1,10 @@
 import { useOutletContext } from "react-router-dom";
+import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
 
 export default function HostVanDetail() {
-  const { hostVanDetails } = useOutletContext();
+  const { hostVanDetails } = useOutletContext() as {
+    hostVanDetails: vansDetailsInterface;
+  };
 
   return (
     <section>

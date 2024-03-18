@@ -12,28 +12,28 @@ export default function HostNav() {
         <NavLink
           end
           to="."
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Dashboard
         </NavLink>
         <NavLink
           to="income"
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Income
         </NavLink>
         <NavLink
           to="vans"
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Vans
         </NavLink>
         <NavLink
           to="reviews"
-          style={({ isActive }) => (isActive ? activeStyle : null)}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
           className="hover:text-black hover:font-semibold hover:underline transition"
         >
           Reviews

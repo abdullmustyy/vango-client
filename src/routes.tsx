@@ -28,7 +28,7 @@ import {
 import Layout from "./components/Layout/Layout";
 import HostLayout from "./components/Layout/HostLayout";
 import HostVanDetailLayout from "./components/Layout/HostVanDetailLayout";
-import ProtectedRoutes from "./utils";
+// import ProtectedRoutes from "./utils/authorize";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
