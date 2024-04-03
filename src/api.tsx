@@ -14,30 +14,38 @@ import {
 
 const vansCollectionRef = collection(db, "vans");
 
-export async function getVans() {
-  const querySnapshot = await getDocs(vansCollectionRef);
-  const data = querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  })) as vansInterface[];
-  const processedData = data.map((data) => {
-    const buttonStyle =
-      data.type === "simple"
-        ? "bg-[#E17654] text-white hover:outline hover:outline-2 hover:outline-[#E17654]"
-        : data.type === "luxury"
-          ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
-          : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
-    return {
-      ...data,
-      buttonStyle: buttonStyle,
-      type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
-    };
-  });
+export async function GetVans() {
+  try {
+    const vansResponse = await fetch(`${import.meta.env.BASE_URL}/vans`);
 
-  return processedData;
+    if (!vansResponse.ok) {
+      throw new Error("Failed to fetch vans data");
+    }
+
+    const vansData: { data: vansInterface[] } = await vansResponse.json();
+
+    const processedData = vansData?.data.map((data) => {
+      const buttonStyle =
+        data.type === "simple"
+          ? "bg-[#E17654] text-white hover:outline hover:outline-2 hover:outline-[#E17654]"
+          : data.type === "luxury"
+            ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
+            : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
+      return {
+        ...data,
+        buttonStyle: buttonStyle,
+        type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
+      };
+    });
+
+    return processedData;
+  } catch (error) {
+    console.error("Error fetching vans data: ", error);
+    throw error;
+  }
 }
 
-export async function getVanDetail(vanId: string) {
+export async function GetVanDetail(vanId: string) {
   const vanRef = doc(db, "vans", vanId);
   const vanShot = await getDoc(vanRef);
   let data = vanShot.data() as vansDetailsInterface;
@@ -56,7 +64,7 @@ export async function getVanDetail(vanId: string) {
   return data;
 }
 
-export async function getHostVans() {
+export async function GetHostVans() {
   const q = query(vansCollectionRef, where("hostId", "==", "123"));
   const querySnapshot = await getDocs(q);
   const data = querySnapshot.docs.map((doc) => ({
@@ -67,7 +75,7 @@ export async function getHostVans() {
   return data;
 }
 
-export async function getHostVanDetail(vanId: string) {
+export async function GetHostVanDetail(vanId: string) {
   const hostVanRef = doc(db, "vans", vanId);
   const hostVanShot = await getDoc(hostVanRef);
   let data = hostVanShot.data() as vansDetailsInterface;
@@ -86,7 +94,7 @@ export async function getHostVanDetail(vanId: string) {
   return data;
 }
 
-export async function loginUser(creds: { email: string; password: string }) {
+export async function LoginUser(creds: { email: string; password: string }) {
   const res = await fetch("/api/login", {
     method: "post",
     body: JSON.stringify(creds),

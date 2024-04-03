@@ -1,18 +1,34 @@
-import { createContext, Suspense } from "react";
+import { createContext } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { useLoaderData, Await } from "react-router-dom";
+// import { useLoaderData, Await } from "react-router-dom";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
 import { vansInterface } from "../../utils/interfaces/vans.interface";
+import { useQuery } from "@tanstack/react-query";
+import { GetVans } from "../../Api";
 
 export const VansContext = createContext({} as { vansData: vansInterface[] });
 
 export default function VansPage() {
-  const vansDataPromise = useLoaderData();
   const dispatch = useAppDispatch();
+  // const vansDataPromise = useLoaderData();
+
+  const { data, error, isPending, isError } = useQuery({
+    queryKey: ["vans"],
+    queryFn: GetVans,
+  });
+
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
 
   const renderVansData = (vansData: vansInterface[]) => {
+    console.log("Vans Data: ", vansData);
     const vansTypes = vansData.map((van, index) => ({
       id: index,
       type: van.type,
@@ -24,7 +40,7 @@ export default function VansPage() {
         const typeB = b.type.toUpperCase();
         return typeA < typeB ? -1 : typeA > typeB ? 1 : 0;
       })
-      .filter((data, index, arr) => data.type !== arr[index - 1]?.type)
+      .filter((data, index, arr) => data.type !== arr[index - 1]?.type);
     dispatch(setFilterOptions(options));
 
     return (
@@ -47,15 +63,7 @@ export default function VansPage() {
           Pick a van you&apos;ll like to rent by clicking on it.
         </p>
       </header>
-      <Suspense
-        fallback={
-          <p className="text-xl font-bold mt-12">Loading vans data ...</p>
-        }
-      >
-        <Await resolve={vansDataPromise}>
-          {(data: { vans: vansInterface[] }) => renderVansData(data.vans)}
-        </Await>
-      </Suspense>
+      {renderVansData(data ?? [])}
     </section>
   );
 }
