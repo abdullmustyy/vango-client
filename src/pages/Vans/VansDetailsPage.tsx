@@ -1,11 +1,31 @@
-import { Suspense } from "react";
-import { Link, useLocation, useLoaderData, Await } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
+import { GetVanDetail } from "../../Api";
+import { useQuery } from "@tanstack/react-query";
+import "react-loading-skeleton/dist/skeleton.css";
+import VansDetailsSkeleton from "../../components/Vans/Skeleton/VansDetailsSkeleton";
 
 export default function VansDetailsPage() {
-  const vanDetailsPromise = useLoaderData();
+  const { id } = useParams();
   const { state } = useLocation();
+
+  const { data, error, isFetching, isError } = useQuery({
+    queryKey: ["van details"],
+    queryFn: () => GetVanDetail(id ?? ""),
+  });
+
+  if (isFetching) {
+    return <VansDetailsSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto md:px-0 px-4 h-screen grid place-content-center">
+        <span>Error: {error.message}</span>
+      </div>
+    );
+  }
 
   const renderVanDetails = (vanDetails: vansDetailsInterface) => (
     <main className="my-10 grid sm:grid-cols-2 gap-10">
@@ -61,17 +81,7 @@ export default function VansDetailsPage() {
           </h2>
         </Link>
       </header>
-      <Suspense
-        fallback={
-          <p className="text-xl font-bold my-12">Loading vans details ...</p>
-        }
-      >
-        <Await resolve={vanDetailsPromise}>
-          {(data: { vanDetails: vansDetailsInterface }) =>
-            renderVanDetails(data.vanDetails)
-          }
-        </Await>
-      </Suspense>
+      {data && renderVanDetails(data.data)}
     </section>
   );
 }

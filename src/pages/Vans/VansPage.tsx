@@ -1,18 +1,20 @@
 import { createContext } from "react";
 import { useAppDispatch } from "../../app/hooks";
-// import { useLoaderData, Await } from "react-router-dom";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
 import { vansInterface } from "../../utils/interfaces/vans.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetVans } from "../../Api";
+import VansFiltersSkeleton from "../../components/Vans/Skeleton/VansFiltersSkeleton";
+import VansShowcaseSkeleton from "../../components/Vans/Skeleton/VansShowcaseSkeleton";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export const VansContext = createContext({} as { vansData: vansInterface[] });
 
 export default function VansPage() {
   const dispatch = useAppDispatch();
-  // const vansDataPromise = useLoaderData();
 
   const { data, error, isPending, isError } = useQuery({
     queryKey: ["vans"],
@@ -20,15 +22,29 @@ export default function VansPage() {
   });
 
   if (isPending) {
-    return <span>Loading...</span>;
+    return (
+      <section className="container mx-auto my-12 md:px-0 px-4 text-[#161616] min-h-screen">
+        <header className="mb12 space-y-2">
+          <Skeleton />
+          <Skeleton />
+        </header>
+        <main>
+          <VansFiltersSkeleton />
+          <VansShowcaseSkeleton />
+        </main>
+      </section>
+    );
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>;
+    return (
+      <div className="container mx-auto md:px-0 px-4 h-screen grid place-content-center">
+        <span>Error: {error.message}</span>
+      </div>
+    );
   }
 
   const renderVansData = (vansData: vansInterface[]) => {
-    console.log("Vans Data: ", vansData);
     const vansTypes = vansData.map((van, index) => ({
       id: index,
       type: van.type,
