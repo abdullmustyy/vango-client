@@ -1,9 +1,23 @@
-import { Suspense } from "react";
-import { Link, useLoaderData, Await } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { vansInterface } from "../../utils/interfaces/vans.interface";
+import { useQuery } from "@tanstack/react-query";
+import { GetHostVans } from "../../Api";
+import Error from "../../components/Error";
+import HostVansSkeleton from "../../components/Host/Skeletons/HostVansSkeleton";
 
 export default function HostVans() {
-  const hostVansPromise = useLoaderData();
+  const { data, isPending, error, isError } = useQuery({
+    queryKey: ["hostVans"],
+    queryFn: GetHostVans,
+  });
+
+  if (isPending) {
+    return <HostVansSkeleton />;
+  }
+
+  if (isError) {
+    return <Error error={error} />;
+  }
 
   const renderHostVans = (hostVans: vansInterface[]) => (
     <div className="grid grid-cols-1 gap-6 pt-6">
@@ -43,19 +57,7 @@ export default function HostVans() {
         <p className="text-lg font-light">
           Click on a van to see more details about it.
         </p>
-        <Suspense
-          fallback={
-            <p className="text-xl font-bold mt-12">
-              Loading host&apos;s vans data ...
-            </p>
-          }
-        >
-          <Await resolve={hostVansPromise}>
-            {(data: { hostVans: vansInterface[] }) =>
-              renderHostVans(data.hostVans)
-            }
-          </Await>
-        </Suspense>
+        {data && renderHostVans(data)}
       </div>
     </section>
   );

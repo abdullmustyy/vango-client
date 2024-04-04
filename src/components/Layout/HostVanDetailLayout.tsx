@@ -1,10 +1,26 @@
-import { Suspense } from "react";
-import { Link, NavLink, Outlet, useLoaderData, Await } from "react-router-dom";
+import { Link, NavLink, Outlet, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
+import { useQuery } from "@tanstack/react-query";
+import { GetHostVanDetail } from "../../Api";
+import Error from "../Error";
+import HostVanDetailSkeleton from "../Host/Skeletons/HostVanDetailSkeleton";
 
 export default function HostVanDetailLayout() {
-  const hostVanDetailsPromise = useLoaderData();
+  const { id } = useParams();
+
+  const { data, error, isFetching, isError } = useQuery({
+    queryKey: ["hostVanDetails"],
+    queryFn: () => GetHostVanDetail(id ?? ""),
+  });
+
+  if (isFetching) {
+    return <HostVanDetailSkeleton />;
+  }
+
+  if (isError) {
+    return <Error error={error} />;
+  }
 
   const activeStyle = {
     color: "black",
@@ -76,19 +92,7 @@ export default function HostVanDetailLayout() {
         </Link>
       </header>
       <main className="container mx-auto">
-        <Suspense
-          fallback={
-            <p className="text-xl font-bold mt-12">
-              Loading host&apos;s van details ...
-            </p>
-          }
-        >
-          <Await resolve={hostVanDetailsPromise}>
-            {(data: { hostVanDetails: vansDetailsInterface }) =>
-              renderHostVanDetails(data.hostVanDetails)
-            }
-          </Await>
-        </Suspense>
+        {data && renderHostVanDetails(data.data)}
       </main>
     </section>
   );

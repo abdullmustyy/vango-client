@@ -1,10 +1,24 @@
-import { Suspense } from "react";
-import { Link, Await, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { vansInterface } from "../../utils/interfaces/vans.interface";
+import { useQuery } from "@tanstack/react-query";
+import { GetHostVans } from "../../Api";
+import Error from "../../components/Error";
+import DashboardSkeleton from "../../components/Host/Skeletons/DashboardSkeleton";
 
 export default function Dashboard() {
-  const hostVansPromise = useLoaderData();
+  const { data, isPending, error, isError } = useQuery({
+    queryKey: ["hostVans"],
+    queryFn: GetHostVans,
+  });
+
+  if (isPending) {
+    return <DashboardSkeleton />;
+  }
+
+  if (isError) {
+    return <Error error={error} />;
+  }
 
   function renderVanElements(vans: vansInterface[]) {
     const hostVansEls = vans.map((van) => (
@@ -67,19 +81,7 @@ export default function Dashboard() {
               View all
             </Link>
           </div>
-          <Suspense
-            fallback={
-              <h3 className="text-xl font-bold my-12">
-                Loading host&apos;s vans data ...
-              </h3>
-            }
-          >
-            <Await resolve={hostVansPromise}>
-              {(data: { hostVans: vansInterface[] }) =>
-                renderVanElements(data.hostVans)
-              }
-            </Await>
-          </Suspense>
+          {data && renderVanElements(data)}
         </section>
       </section>
     </main>

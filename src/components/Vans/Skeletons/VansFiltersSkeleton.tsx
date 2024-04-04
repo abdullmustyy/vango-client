@@ -6,7 +6,7 @@ const VansFiltersSkeleton = () => {
     <div className="flex items-center mt-4 mb-12 md:space-x-8 space-x-3">
       {[...Array(3)].map((_, index) => (
         <div key={index} className="md:space-x-8 space-x-3">
-          <Skeleton width={100} height={30} />
+          <Skeleton width={97} height={40} />
         </div>
       ))}
     </div>

@@ -5,7 +5,7 @@ const VansDetailsSkeleton = () => {
   return (
     <section className="container mx-auto text-[#201F1D] sm:px-0 px-4">
       <header className="my-8">
-        <Skeleton />
+        <Skeleton width={111} height={24} />
       </header>
       <main className="my-10 grid sm:grid-cols-2 gap-10">
         <section className="md:my-8">

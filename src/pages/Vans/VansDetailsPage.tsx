@@ -4,14 +4,15 @@ import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
 import { GetVanDetail } from "../../Api";
 import { useQuery } from "@tanstack/react-query";
 import "react-loading-skeleton/dist/skeleton.css";
-import VansDetailsSkeleton from "../../components/Vans/Skeleton/VansDetailsSkeleton";
+import VansDetailsSkeleton from "../../components/Vans/Skeletons/VansDetailsSkeleton";
+import Error from "../../components/Error";
 
 export default function VansDetailsPage() {
   const { id } = useParams();
   const { state } = useLocation();
 
   const { data, error, isFetching, isError } = useQuery({
-    queryKey: ["van details"],
+    queryKey: ["vanDetails"],
     queryFn: () => GetVanDetail(id ?? ""),
   });
 
@@ -20,11 +21,7 @@ export default function VansDetailsPage() {
   }
 
   if (isError) {
-    return (
-      <div className="container mx-auto md:px-0 px-4 h-screen grid place-content-center">
-        <span>Error: {error.message}</span>
-      </div>
-    );
+    return <Error error={error} />;
   }
 
   const renderVanDetails = (vanDetails: vansDetailsInterface) => (

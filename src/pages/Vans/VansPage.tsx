@@ -6,10 +6,11 @@ import VansShowcase from "../../components/Vans/VansShowcase";
 import { vansInterface } from "../../utils/interfaces/vans.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetVans } from "../../Api";
-import VansFiltersSkeleton from "../../components/Vans/Skeleton/VansFiltersSkeleton";
-import VansShowcaseSkeleton from "../../components/Vans/Skeleton/VansShowcaseSkeleton";
+import VansFiltersSkeleton from "../../components/Vans/Skeletons/VansFiltersSkeleton";
+import VansShowcaseSkeleton from "../../components/Vans/Skeletons/VansShowcaseSkeleton";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Error from "../../components/Error";
 
 export const VansContext = createContext({} as { vansData: vansInterface[] });
 
@@ -25,8 +26,8 @@ export default function VansPage() {
     return (
       <section className="container mx-auto my-12 md:px-0 px-4 text-[#161616] min-h-screen">
         <header className="mb12 space-y-2">
-          <Skeleton />
-          <Skeleton />
+          <Skeleton height={48} />
+          <Skeleton height={28} />
         </header>
         <main>
           <VansFiltersSkeleton />
@@ -37,11 +38,7 @@ export default function VansPage() {
   }
 
   if (isError) {
-    return (
-      <div className="container mx-auto md:px-0 px-4 h-screen grid place-content-center">
-        <span>Error: {error.message}</span>
-      </div>
-    );
+    return <Error error={error} />;
   }
 
   const renderVansData = (vansData: vansInterface[]) => {

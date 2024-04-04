@@ -1,22 +1,13 @@
 import { db } from "./firebase";
-import {
-  getDocs,
-  getDoc,
-  doc,
-  collection,
-  query,
-  where,
-} from "firebase/firestore/lite";
+import { getDoc, doc } from "firebase/firestore/lite";
 import {
   vansInterface,
   vansDetailsInterface,
 } from "./utils/interfaces/vans.interface";
 
-const vansCollectionRef = collection(db, "vans");
-
 export async function GetVans() {
   try {
-    const vansResponse = await fetch(`${import.meta.env.BASE_URL}/vans`);
+    const vansResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/vans`);
 
     if (!vansResponse.ok) {
       throw new Error("Failed to fetch vans data");
@@ -46,52 +37,89 @@ export async function GetVans() {
 }
 
 export async function GetVanDetail(vanId: string) {
-  const vanRef = doc(db, "vans", vanId);
-  const vanShot = await getDoc(vanRef);
-  let data = vanShot.data() as vansDetailsInterface;
+  try {
+    const vanResponse = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/vans/${vanId}`
+    );
 
-  data = {
-    ...data,
-    typeBg:
-      data.type === "simple"
-        ? "[#E17654]"
-        : data.type === "luxury"
-          ? "[#161616]"
-          : "[#115E59]",
-    type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
-  };
+    if (!vanResponse.ok) {
+      throw new Error("Failed to fetch van detail");
+    }
 
-  return data;
+    let data: { data: vansDetailsInterface } = await vanResponse.json();
+
+    data = {
+      ...data,
+      data: {
+        ...data.data,
+        typeBg:
+          data.data.type === "simple"
+            ? "[#E17654]"
+            : data.data.type === "luxury"
+              ? "[#161616]"
+              : "[#115E59]",
+        type: data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
+      },
+    };
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching van detail: ", error);
+    throw error;
+  }
 }
 
 export async function GetHostVans() {
-  const q = query(vansCollectionRef, where("hostId", "==", "123"));
-  const querySnapshot = await getDocs(q);
-  const data = querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
+  try {
+    const hostVansResponse = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`
+    );
 
-  return data;
+    if (!hostVansResponse.ok) {
+      throw new Error("Failed to fetch host vans data");
+    }
+
+    const hostVansData: { data: vansInterface[] } =
+      await hostVansResponse.json();
+
+    return hostVansData.data;
+  } catch (error) {
+    console.error("Error fetching host vans data: ", error);
+    throw error;
+  }
 }
 
 export async function GetHostVanDetail(vanId: string) {
-  const hostVanRef = doc(db, "vans", vanId);
-  const hostVanShot = await getDoc(hostVanRef);
-  let data = hostVanShot.data() as vansDetailsInterface;
+  try {
+    const hostVanResponse = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
+    );
 
-  data = {
-    ...data,
-    typeBg:
-      data.type === "simple"
-        ? "[#E17654]"
-        : data.type === "luxury"
-          ? "[#161616]"
-          : "[#115E59]",
-    type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
-  };
+    if (!hostVanResponse.ok) {
+      throw new Error("Failed to fetch host van detail");
+    }
 
-  return data;
+    let data: { data: vansDetailsInterface } = await hostVanResponse.json();
+
+    data = {
+      ...data,
+      data: {
+        ...data.data,
+        typeBg:
+          data.data.type === "simple"
+            ? "[#E17654]"
+            : data.data.type === "luxury"
+              ? "[#161616]"
+              : "[#115E59]",
+        type: data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
+      },
+    };
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching host van detail: ", error);
+    throw error;
+  }
 }
 
 export async function LoginUser(creds: { email: string; password: string }) {
