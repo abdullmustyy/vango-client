@@ -1,19 +1,18 @@
-import { db } from "./firebase";
-import { getDoc, doc } from "firebase/firestore/lite";
+import axios from "./utils/configs/axios.config";
 import {
   vansInterface,
   vansDetailsInterface,
-} from "./utils/interfaces/vans.interface";
+} from "./utils/interfaces/van.interface";
 
 export async function GetVans() {
   try {
-    const vansResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/vans`);
+    const vansResponse = await axios.get("/vans");
 
-    if (!vansResponse.ok) {
+    if (vansResponse.statusText !== "OK") {
       throw new Error("Failed to fetch vans data");
     }
 
-    const vansData: { data: vansInterface[] } = await vansResponse.json();
+    const vansData: { data: vansInterface[] } = vansResponse.data;
 
     const processedData = vansData?.data.map((data) => {
       const buttonStyle =
@@ -38,15 +37,13 @@ export async function GetVans() {
 
 export async function GetVanDetail(vanId: string) {
   try {
-    const vanResponse = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/vans/${vanId}`
-    );
+    const vanResponse = await axios.get(`/vans/${vanId}`);
 
-    if (!vanResponse.ok) {
+    if (vanResponse.statusText !== "OK") {
       throw new Error("Failed to fetch van detail");
     }
 
-    let data: { data: vansDetailsInterface } = await vanResponse.json();
+    let data: { data: vansDetailsInterface } = vanResponse.data;
 
     data = {
       ...data,
@@ -71,16 +68,15 @@ export async function GetVanDetail(vanId: string) {
 
 export async function GetHostVans() {
   try {
-    const hostVansResponse = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`
+    const hostVansResponse = await axios.get(
+      `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`
     );
 
-    if (!hostVansResponse.ok) {
+    if (hostVansResponse.statusText !== "OK") {
       throw new Error("Failed to fetch host vans data");
     }
 
-    const hostVansData: { data: vansInterface[] } =
-      await hostVansResponse.json();
+    const hostVansData: { data: vansInterface[] } = hostVansResponse.data;
 
     return hostVansData.data;
   } catch (error) {
@@ -91,15 +87,15 @@ export async function GetHostVans() {
 
 export async function GetHostVanDetail(vanId: string) {
   try {
-    const hostVanResponse = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
+    const hostVanResponse = await axios.get(
+      `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
     );
 
-    if (!hostVanResponse.ok) {
+    if (hostVanResponse.statusText !== "OK") {
       throw new Error("Failed to fetch host van detail");
     }
 
-    let data: { data: vansDetailsInterface } = await hostVanResponse.json();
+    let data: { data: vansDetailsInterface } = hostVanResponse.data;
 
     data = {
       ...data,

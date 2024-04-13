@@ -12,17 +12,28 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import FileUploader from "../components/FileUploader";
 
 const authSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email address.").required("Required"),
+  name: Yup.string()
+    .required("You have not provided a name.")
+    .min(4, "Name must have at least 4 characters."),
+  email: Yup.string()
+    .email("Invalid email address.")
+    .required("You have not provided an email."),
+  username: Yup.string()
+    .required("You have not provided a username.")
+    .min(4, "Username must have at least 4 characters."),
   password: Yup.string()
-    .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum.")
+    .required("You have not provided a password.")
+    .min(8, "Password must have at least 4 characters.")
     .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
 });
 
 const authValues = {
+  name: "",
   email: "",
+  username: "",
   password: "",
 };
 
@@ -102,10 +113,10 @@ export default function AuthPage() {
         <Formik
           initialValues={authValues}
           validationSchema={authSchema}
-          onSubmit={async ({ email, password }) => {
+          onSubmit={async ({ name, email, username, password }) => {
             const userCredential = await signInWithEmailAndPassword(
               auth,
-              email,
+              username,
               password
             );
             console.log(userCredential.user);
@@ -113,11 +124,28 @@ export default function AuthPage() {
         >
           {({ isSubmitting, resetForm }) => (
             <Form className="grid gap-4">
+              {isSignUp && (
+                <>
+                  <MyTextInput
+                    name="name"
+                    type="text"
+                    placeholder="Name"
+                    label="Name"
+                  />
+                  <FileUploader />
+                  <MyTextInput
+                    name="email"
+                    type="text"
+                    placeholder="Email"
+                    label="Email"
+                  />
+                </>
+              )}
               <MyTextInput
-                name="email"
-                type="email"
-                placeholder="Email address"
-                label="Email"
+                name="username"
+                type="text"
+                placeholder="Username"
+                label="Username"
               />
               <MyTextInput
                 name="password"

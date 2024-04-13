@@ -6,6 +6,8 @@ export default function NavBar() {
     textDecoration: "underline",
   };
 
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+
   return (
     <nav className="py-4 md:px-0 px-4">
       <div className="container mx-auto flex justify-between">
@@ -40,12 +42,22 @@ export default function NavBar() {
           >
             Vans
           </NavLink>
-          <button
-            type="button"
-            onClick={() => localStorage.setItem("isLoggedIn", "false")}
-          >
-            Log Out
-          </button>
+          {isLoggedIn === "true" ? (
+            <button
+              type="button"
+              onClick={() => localStorage.setItem("isLoggedIn", "false")}
+            >
+              Log Out
+            </button>
+          ) : (
+            <NavLink
+              to={"/auth"}
+              style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              className="hover:underline"
+            >
+              Log In
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>

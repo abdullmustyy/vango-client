@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { vansDetailsInterface } from "../../utils/interfaces/vans.interface";
+import { vansDetailsInterface } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetHostVanDetail } from "../../Api";
 import Error from "../Error";

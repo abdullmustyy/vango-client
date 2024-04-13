@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
-import { vansInterface } from "../../utils/interfaces/vans.interface";
+import { vansInterface } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetVans } from "../../Api";
 import VansFiltersSkeleton from "../../components/Vans/Skeletons/VansFiltersSkeleton";

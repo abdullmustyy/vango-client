@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { vansInterface } from "../../utils/interfaces/vans.interface";
+import { vansInterface } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetHostVans } from "../../Api";
 import Error from "../../components/Error";
