@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
-import { vansInterface } from "../../utils/interfaces/van.interface";
+import { IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetVans } from "../../Api";
 import VansFiltersSkeleton from "../../components/Vans/Skeletons/VansFiltersSkeleton";
@@ -12,7 +12,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Error from "../../components/Error";
 
-export const VansContext = createContext({} as { vansData: vansInterface[] });
+export const VansContext = createContext({} as { vansData: IVan[] });
 
 export default function VansPage() {
   const dispatch = useAppDispatch();
@@ -20,6 +20,9 @@ export default function VansPage() {
   const { data, error, isPending, isError } = useQuery({
     queryKey: ["vans"],
     queryFn: GetVans,
+    // select: useCallback((data: IGetVans) => {
+    //   return data.data;
+    // }, []),
   });
 
   if (isPending) {
@@ -41,7 +44,7 @@ export default function VansPage() {
     return <Error error={error} />;
   }
 
-  const renderVansData = (vansData: vansInterface[]) => {
+  const renderVansData = (vansData: IVan[]) => {
     const vansTypes = vansData.map((van, index) => ({
       id: index,
       type: van.type,

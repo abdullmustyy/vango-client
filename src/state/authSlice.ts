@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { error: null, pageType: "signin" };
+const initialState = { error: null, pageType: "signin", imageUrl: "" };
 
 const authSlice = createSlice({
   name: "auth",
@@ -12,8 +12,11 @@ const authSlice = createSlice({
     setPageType(state, action) {
       state.pageType = action.payload;
     },
+    setImageUrl(state, action) {
+      state.imageUrl = action.payload;
+    },
   },
 });
 
-export const { setError, setPageType } = authSlice.actions;
+export const { setError, setPageType, setImageUrl } = authSlice.actions;
 export default authSlice.reducer;

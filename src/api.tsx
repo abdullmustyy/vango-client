@@ -1,121 +1,225 @@
 import axios from "./utils/configs/axios.config";
-import {
-  vansInterface,
-  vansDetailsInterface,
-} from "./utils/interfaces/van.interface";
+import { IPostImage, IPostUser } from "./utils/interfaces/index.interface";
+import { IGetVans, IGetVanDetail } from "./utils/interfaces/van.interface";
 
 export async function GetVans() {
-  try {
-    const vansResponse = await axios.get("/vans");
+  return axios
+    .get<IGetVans>("/vans")
+    .then((vansResponse) => {
+      const vansData = vansResponse.data;
 
-    if (vansResponse.statusText !== "OK") {
-      throw new Error("Failed to fetch vans data");
-    }
+      const processedData = vansData.data.map((data) => {
+        const buttonStyle =
+          data.type === "simple"
+            ? "bg-[#E17654] text-white hover:outline hover:outline-2 hover:outline-[#E17654]"
+            : data.type === "luxury"
+              ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
+              : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
+        return {
+          ...data,
+          buttonStyle: buttonStyle,
+          type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
+        };
+      });
 
-    const vansData: { data: vansInterface[] } = vansResponse.data;
-
-    const processedData = vansData?.data.map((data) => {
-      const buttonStyle =
-        data.type === "simple"
-          ? "bg-[#E17654] text-white hover:outline hover:outline-2 hover:outline-[#E17654]"
-          : data.type === "luxury"
-            ? "bg-[#161616] text-white hover:outline hover:outline-2 hover:outline-[#161616]"
-            : "bg-[#115E59] text-white hover:outline hover:outline-2 hover:outline-[#115E59]";
-      return {
-        ...data,
-        buttonStyle: buttonStyle,
-        type: data.type.charAt(0).toUpperCase() + data.type.slice(1),
-      };
+      return processedData;
+    })
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error while fetching vans: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Error while fetching vans: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
     });
-
-    return processedData;
-  } catch (error) {
-    console.error("Error fetching vans data: ", error);
-    throw error;
-  }
 }
 
 export async function GetVanDetail(vanId: string) {
-  try {
-    const vanResponse = await axios.get(`/vans/${vanId}`);
+  return axios
+    .get<IGetVanDetail>(`/vans/${vanId}`)
+    .then((vanResponse) => {
+      let data = vanResponse.data;
 
-    if (vanResponse.statusText !== "OK") {
-      throw new Error("Failed to fetch van detail");
-    }
+      data = {
+        ...data,
+        data: {
+          ...data.data,
+          typeBg:
+            data.data.type === "simple"
+              ? "[#E17654]"
+              : data.data.type === "luxury"
+                ? "[#161616]"
+                : "[#115E59]",
+          type:
+            data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
+        },
+      };
 
-    let data: { data: vansDetailsInterface } = vanResponse.data;
-
-    data = {
-      ...data,
-      data: {
-        ...data.data,
-        typeBg:
-          data.data.type === "simple"
-            ? "[#E17654]"
-            : data.data.type === "luxury"
-              ? "[#161616]"
-              : "[#115E59]",
-        type: data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
-      },
-    };
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching van detail: ", error);
-    throw error;
-  }
+      return data;
+    })
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error while fetching van detail: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Error while fetching van detail: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
 }
 
 export async function GetHostVans() {
-  try {
-    const hostVansResponse = await axios.get(
-      `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`
-    );
-
-    if (hostVansResponse.statusText !== "OK") {
-      throw new Error("Failed to fetch host vans data");
-    }
-
-    const hostVansData: { data: vansInterface[] } = hostVansResponse.data;
-
-    return hostVansData.data;
-  } catch (error) {
-    console.error("Error fetching host vans data: ", error);
-    throw error;
-  }
+  return axios
+    .get<IGetVans>(`/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`)
+    .then((hostVansResponse) => hostVansResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error while fetching host vans: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Error while fetching host vans: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
 }
 
 export async function GetHostVanDetail(vanId: string) {
-  try {
-    const hostVanResponse = await axios.get(
+  return axios
+    .get<IGetVanDetail>(
       `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
-    );
+    )
+    .then((hostVanResponse) => {
+      let data = hostVanResponse.data;
 
-    if (hostVanResponse.statusText !== "OK") {
-      throw new Error("Failed to fetch host van detail");
-    }
+      data = {
+        ...data,
+        data: {
+          ...data.data,
+          typeBg:
+            data.data.type === "simple"
+              ? "[#E17654]"
+              : data.data.type === "luxury"
+                ? "[#161616]"
+                : "[#115E59]",
+          type:
+            data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
+        },
+      };
 
-    let data: { data: vansDetailsInterface } = hostVanResponse.data;
+      return data;
+    })
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(
+          "Error while fetching host van detail: ",
+          error.response.data
+        );
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Error while fetching host van detail: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
+}
 
-    data = {
-      ...data,
-      data: {
-        ...data.data,
-        typeBg:
-          data.data.type === "simple"
-            ? "[#E17654]"
-            : data.data.type === "luxury"
-              ? "[#161616]"
-              : "[#115E59]",
-        type: data.data.type.charAt(0).toUpperCase() + data.data.type.slice(1),
-      },
-    };
+export async function UploadProfileImage(image: File) {
+  const form = new FormData();
+  form.append("image", image);
 
-    return data;
-  } catch (error) {
-    console.error("Error fetching host van detail: ", error);
-    throw error;
-  }
+  return axios
+    .post<IPostImage>("/upload-image", form)
+    .then((imageResponse) => imageResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Image upload error: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Image upload error: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
+}
+
+export async function RegisterUser(
+  name: string,
+  imageUrl: string,
+  email: string,
+  username: string,
+  password: string
+): Promise<IPostUser> {
+  return axios
+    .post("/register", {
+      name,
+      imageUrl,
+      email,
+      username,
+      password,
+    })
+    .then((userResponse) => userResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Registration error: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("Registration error: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
 }
 
 export async function LoginUser(creds: { email: string; password: string }) {

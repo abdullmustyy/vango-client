@@ -1,10 +1,11 @@
 import { Link, NavLink, Outlet, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { vansDetailsInterface } from "../../utils/interfaces/van.interface";
+import { IGetVanDetail, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetHostVanDetail } from "../../Api";
 import Error from "../Error";
 import HostVanDetailSkeleton from "../Host/Skeletons/HostVanDetailSkeleton";
+import { useCallback } from "react";
 
 export default function HostVanDetailLayout() {
   const { id } = useParams();
@@ -12,6 +13,9 @@ export default function HostVanDetailLayout() {
   const { data, error, isFetching, isError } = useQuery({
     queryKey: ["hostVanDetails"],
     queryFn: () => GetHostVanDetail(id ?? ""),
+    select: useCallback((data: IGetVanDetail) => {
+      return data.data;
+    }, []),
   });
 
   if (isFetching) {
@@ -27,7 +31,7 @@ export default function HostVanDetailLayout() {
     textDecoration: "underline",
   };
 
-  const renderHostVanDetails = (hostVanDetails: vansDetailsInterface) => (
+  const renderHostVanDetails = (hostVanDetails: IVan) => (
     <div className="bg-white p-8 mt-8 rounded-lg space-y-6">
       <div className="flex md:space-x-10 space-x-6">
         <div className="w-fit rounded-l-lg">
@@ -92,7 +96,7 @@ export default function HostVanDetailLayout() {
         </Link>
       </header>
       <main className="container mx-auto">
-        {data && renderHostVanDetails(data.data)}
+        {data && renderHostVanDetails(data)}
       </main>
     </section>
   );

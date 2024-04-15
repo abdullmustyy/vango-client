@@ -1,15 +1,19 @@
 import { Link } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
-import { vansInterface } from "../../utils/interfaces/van.interface";
+import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetHostVans } from "../../Api";
 import Error from "../../components/Error";
 import DashboardSkeleton from "../../components/Host/Skeletons/DashboardSkeleton";
+import { useCallback } from "react";
 
 export default function Dashboard() {
   const { data, isPending, error, isError } = useQuery({
     queryKey: ["hostVans"],
     queryFn: GetHostVans,
+    select: useCallback((data: IGetVans) => {
+      return data.data;
+    }, []),
   });
 
   if (isPending) {
@@ -20,7 +24,7 @@ export default function Dashboard() {
     return <Error error={error} />;
   }
 
-  function renderVanElements(vans: vansInterface[]) {
+  function renderVanElements(vans: IVan[]) {
     const hostVansEls = vans.map((van) => (
       <div
         className="bg-white flex items-center gap-6 p-6 rounded-lg shadow-sm"

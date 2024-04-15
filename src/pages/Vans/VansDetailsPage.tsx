@@ -1,11 +1,12 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { vansDetailsInterface } from "../../utils/interfaces/van.interface";
+import { IGetVanDetail, IVan } from "../../utils/interfaces/van.interface";
 import { GetVanDetail } from "../../Api";
 import { useQuery } from "@tanstack/react-query";
 import "react-loading-skeleton/dist/skeleton.css";
 import VansDetailsSkeleton from "../../components/Vans/Skeletons/VansDetailsSkeleton";
 import Error from "../../components/Error";
+import { useCallback } from "react";
 
 export default function VansDetailsPage() {
   const { id } = useParams();
@@ -14,6 +15,9 @@ export default function VansDetailsPage() {
   const { data, error, isFetching, isError } = useQuery({
     queryKey: ["vanDetails"],
     queryFn: () => GetVanDetail(id ?? ""),
+    select: useCallback((data: IGetVanDetail) => {
+      return data.data;
+    }, []),
   });
 
   if (isFetching) {
@@ -24,7 +28,7 @@ export default function VansDetailsPage() {
     return <Error error={error} />;
   }
 
-  const renderVanDetails = (vanDetails: vansDetailsInterface) => (
+  const renderVanDetails = (vanDetails: IVan) => (
     <main className="my-10 grid sm:grid-cols-2 gap-10">
       <section className="md:my-8">
         <div
@@ -78,7 +82,7 @@ export default function VansDetailsPage() {
           </h2>
         </Link>
       </header>
-      {data && renderVanDetails(data.data)}
+      {data && renderVanDetails(data)}
     </section>
   );
 }

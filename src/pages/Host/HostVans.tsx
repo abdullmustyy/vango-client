@@ -1,14 +1,18 @@
 import { Link } from "react-router-dom";
-import { vansInterface } from "../../utils/interfaces/van.interface";
+import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
 import { GetHostVans } from "../../Api";
 import Error from "../../components/Error";
 import HostVansSkeleton from "../../components/Host/Skeletons/HostVansSkeleton";
+import { useCallback } from "react";
 
 export default function HostVans() {
   const { data, isPending, error, isError } = useQuery({
     queryKey: ["hostVans"],
     queryFn: GetHostVans,
+    select: useCallback((data: IGetVans) => {
+      return data.data;
+    }, []),
   });
 
   if (isPending) {
@@ -19,7 +23,7 @@ export default function HostVans() {
     return <Error error={error} />;
   }
 
-  const renderHostVans = (hostVans: vansInterface[]) => (
+  const renderHostVans = (hostVans: IVan[]) => (
     <div className="grid grid-cols-1 gap-6 pt-6">
       {hostVans.map((vanData) => (
         <div

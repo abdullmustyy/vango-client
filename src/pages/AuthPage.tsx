@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { setError, setPageType } from "../state/authSlice";
+import { setError, setImageUrl, setPageType } from "../state/authSlice";
 // Formik and Yup imports
 import * as Yup from "yup";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import { MyTextInput } from "../components/FormItems";
 // Firebase imports
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import FileUploader from "../components/FileUploader";
+import { useCallback } from "react";
+import { RegisterUser } from "../Api";
+import { useMutation } from "@tanstack/react-query";
 
 const authSchema = Yup.object().shape({
   name: Yup.string()
@@ -26,7 +26,7 @@ const authSchema = Yup.object().shape({
     .min(4, "Username must have at least 4 characters."),
   password: Yup.string()
     .required("You have not provided a password.")
-    .min(8, "Password must have at least 4 characters.")
+    .min(8, "Password must have at least 8 characters.")
     .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
 });
 
@@ -38,66 +38,133 @@ const authValues = {
 };
 
 export default function AuthPage() {
-  const { error, pageType } = useAppSelector((state) => state.auth);
+  const { data, mutate, isSuccess } = useMutation({
+    mutationKey: ["registerUser"],
+    mutationFn: ({
+      name,
+      imageUrl,
+      email,
+      username,
+      password,
+    }: {
+      name: string;
+      imageUrl: string;
+      email: string;
+      username: string;
+      password: string;
+    }) => RegisterUser(name, imageUrl, email, username, password),
+  });
+
+  if (isSuccess) {
+    console.log("User registered successfully", data.data);
+  }
+
+  const { error, pageType, imageUrl } = useAppSelector((state) => state.auth);
   const isSignIn = pageType === "signin";
   const isSignUp = pageType === "signup";
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  async function signUp(
-    { email, password }: { email: string; password: string },
-    resetForm: () => void
-  ) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(userCredential.user);
-      resetForm();
-      dispatch(setPageType("signin"));
-    } catch (error) {
-      console.log("Error", error);
-      const errorMessage = (error as Error).message;
-      dispatch(setError(errorMessage));
-    }
-  }
+  // Upload profile image to Cloudinary on image drop and set the imageUrl in the state with the returned image URL
+  const handleImageUpload = useCallback(
+    (imageUrl: string) => {
+      dispatch(setImageUrl(imageUrl));
+    },
+    [dispatch]
+  );
 
-  async function signIn(
-    { email, password }: { email: string; password: string },
-    resetForm: () => void
-  ) {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
+  const signUp = useCallback(
+    (
+      {
+        name,
         email,
-        password
-      );
-      console.log(userCredential.user);
-      resetForm();
-      navigate(location.state?.from || "/", {
-        replace: true,
-      });
-    } catch (error) {
-      console.log("Error", error);
-      const errorMessage = (error as Error).message;
-      dispatch(setError(errorMessage));
-    }
-  }
+        username,
+        password,
+      }: { name: string; email: string; username: string; password: string },
+      { resetForm }: { resetForm: () => void }
+    ) => {
+      try {
+        // Make the API call to register the user
+        mutate(
+          { name, imageUrl, email, username, password },
+          {
+            onSuccess(data, variables, context) {
+              console.log("User registered successfully", data.data);
+              resetForm();
+              navigate(location.state?.from || "/", {
+                replace: true,
+              });
 
-  async function handleSubmit(
-    values: { email: string; password: string },
-    {
-      resetForm,
-      isSubmitting,
-    }: { resetForm: () => void; isSubmitting: boolean }
-  ) {
-    console.log(isSubmitting);
-    dispatch(setError(null));
-    await signIn(values, resetForm);
-  }
+              // // Clear the form
+              // resetForm();
+
+              // // Set the page type to sign in
+              // dispatch(setPageType("signin"));
+            },
+          }
+        );
+      } catch (error) {
+        console.log("Error", error);
+        const errorMessage = (error as Error).message;
+        dispatch(setError(errorMessage));
+      }
+    },
+    [dispatch, imageUrl, location.state?.from, mutate, navigate]
+  );
+
+  const signIn = useCallback(
+    async (
+      { email, password }: { email: string; password: string },
+      resetForm: () => void
+    ) => {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        console.log(userCredential.user);
+        resetForm();
+        navigate(location.state?.from || "/", {
+          replace: true,
+        });
+      } catch (error) {
+        console.log("Error", error);
+        const errorMessage = (error as Error).message;
+        dispatch(setError(errorMessage));
+      }
+    },
+    [dispatch, location.state?.from, navigate]
+  );
+
+  const handleSubmit = useCallback(
+    (
+      values: {
+        name: string;
+        email: string;
+        username: string;
+        password: string;
+      },
+      actions: FormikHelpers<{
+        name: string;
+        email: string;
+        username: string;
+        password: string;
+      }>
+    ) => {
+      // Clear the error state
+      dispatch(setError(null));
+
+      // Check if the user is signing up or signing in and call the appropriate function
+      if (isSignUp) {
+        signUp(values, actions);
+      } else {
+        signIn(values, actions.resetForm);
+      }
+    },
+    [dispatch, isSignUp, signIn, signUp]
+  );
 
   return (
     <section className="container mx-auto md:grid place-content-center py-36 md:px-0 px-4 text-[#161616] select-text">
@@ -113,14 +180,7 @@ export default function AuthPage() {
         <Formik
           initialValues={authValues}
           validationSchema={authSchema}
-          onSubmit={async ({ name, email, username, password }) => {
-            const userCredential = await signInWithEmailAndPassword(
-              auth,
-              username,
-              password
-            );
-            console.log(userCredential.user);
-          }}
+          onSubmit={(values, actions) => handleSubmit(values, actions)}
         >
           {({ isSubmitting, resetForm }) => (
             <Form className="grid gap-4">
@@ -132,7 +192,11 @@ export default function AuthPage() {
                     placeholder="Name"
                     label="Name"
                   />
-                  <FileUploader />
+                  <FileUploader
+                    handleImageUpload={(imageUrl: string) =>
+                      handleImageUpload(imageUrl)
+                    }
+                  />
                   <MyTextInput
                     name="email"
                     type="text"
