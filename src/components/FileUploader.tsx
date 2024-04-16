@@ -1,6 +1,6 @@
 import Dropzone from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
-import { UploadProfileImage } from "../api";
+import { uploadProfileImage } from "../api";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
 
@@ -12,7 +12,7 @@ const FileUploader = ({
   // Mutation hook
   const { data, mutate, isPending, isSuccess, isError, error } = useMutation({
     mutationKey: ["uploadProfileImage"],
-    mutationFn: (image: File) => UploadProfileImage(image),
+    mutationFn: (image: File) => uploadProfileImage(image),
   });
   // State declarations
   const [errorMessage, setErrorMessage] = useState("");

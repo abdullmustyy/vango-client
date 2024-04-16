@@ -2,7 +2,7 @@ import axios from "./utils/configs/axios.config";
 import { IPostImage, IPostUser } from "./utils/interfaces/index.interface";
 import { IGetVans, IGetVanDetail } from "./utils/interfaces/van.interface";
 
-export async function GetVans() {
+export async function getVans() {
   return axios
     .get<IGetVans>("/vans")
     .then((vansResponse) => {
@@ -44,7 +44,7 @@ export async function GetVans() {
     });
 }
 
-export async function GetVanDetail(vanId: string) {
+export async function getVanDetail(vanId: string) {
   return axios
     .get<IGetVanDetail>(`/vans/${vanId}`)
     .then((vanResponse) => {
@@ -87,7 +87,7 @@ export async function GetVanDetail(vanId: string) {
     });
 }
 
-export async function GetHostVans() {
+export async function getHostVans() {
   return axios
     .get<IGetVans>(`/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`)
     .then((hostVansResponse) => hostVansResponse.data)
@@ -111,7 +111,7 @@ export async function GetHostVans() {
     });
 }
 
-export async function GetHostVanDetail(vanId: string) {
+export async function getHostVanDetail(vanId: string) {
   return axios
     .get<IGetVanDetail>(
       `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
@@ -159,7 +159,7 @@ export async function GetHostVanDetail(vanId: string) {
     });
 }
 
-export async function UploadProfileImage(image: File) {
+export async function uploadProfileImage(image: File) {
   const form = new FormData();
   form.append("image", image);
 
@@ -186,7 +186,7 @@ export async function UploadProfileImage(image: File) {
     });
 }
 
-export async function RegisterUser(
+export async function registerUser(
   name: string,
   imageUrl: string,
   email: string,
@@ -222,7 +222,7 @@ export async function RegisterUser(
     });
 }
 
-export async function LoginUser(creds: { email: string; password: string }) {
+export async function loginUser(creds: { email: string; password: string }) {
   const res = await fetch("/api/login", {
     method: "post",
     body: JSON.stringify(creds),

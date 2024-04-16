@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetHostVans } from "../../api";
+import { getHostVans } from "../../api";
 import Error from "../../components/Error";
 import DashboardSkeleton from "../../components/Host/Skeletons/DashboardSkeleton";
 import { useCallback } from "react";
@@ -10,7 +10,7 @@ import { useCallback } from "react";
 export default function Dashboard() {
   const { data, isPending, error, isError } = useQuery({
     queryKey: ["hostVans"],
-    queryFn: GetHostVans,
+    queryFn: getHostVans,
     select: useCallback((data: IGetVans) => {
       return data.data;
     }, []),

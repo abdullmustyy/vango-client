@@ -1,7 +1,7 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { IGetVanDetail, IVan } from "../../utils/interfaces/van.interface";
-import { GetVanDetail } from "../../api";
+import { getVanDetail } from "../../api";
 import { useQuery } from "@tanstack/react-query";
 import "react-loading-skeleton/dist/skeleton.css";
 import VansDetailsSkeleton from "../../components/Vans/Skeletons/VansDetailsSkeleton";
@@ -14,7 +14,7 @@ export default function VansDetailsPage() {
 
   const { data, error, isFetching, isError } = useQuery({
     queryKey: ["vanDetails"],
-    queryFn: () => GetVanDetail(id ?? ""),
+    queryFn: () => getVanDetail(id ?? ""),
     select: useCallback((data: IGetVanDetail) => {
       return data.data;
     }, []),

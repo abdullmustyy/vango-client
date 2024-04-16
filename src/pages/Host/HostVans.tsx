@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetHostVans } from "../../api";
+import { getHostVans } from "../../api";
 import Error from "../../components/Error";
 import HostVansSkeleton from "../../components/Host/Skeletons/HostVansSkeleton";
 import { useCallback } from "react";
@@ -9,7 +9,7 @@ import { useCallback } from "react";
 export default function HostVans() {
   const { data, isPending, error, isError } = useQuery({
     queryKey: ["hostVans"],
-    queryFn: GetHostVans,
+    queryFn: getHostVans,
     select: useCallback((data: IGetVans) => {
       return data.data;
     }, []),

@@ -11,7 +11,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import FileUploader from "../components/FileUploader";
 import { useCallback } from "react";
-import { RegisterUser } from "../api";
+import { registerUser as registerUser } from "../api";
 import { useMutation } from "@tanstack/react-query";
 
 const authSchema = Yup.object().shape({
@@ -38,7 +38,7 @@ const authValues = {
 };
 
 export default function AuthPage() {
-  const { data, mutate, isSuccess } = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ["registerUser"],
     mutationFn: ({
       name,
@@ -52,12 +52,8 @@ export default function AuthPage() {
       email: string;
       username: string;
       password: string;
-    }) => RegisterUser(name, imageUrl, email, username, password),
+    }) => registerUser(name, imageUrl, email, username, password),
   });
-
-  if (isSuccess) {
-    console.log("User registered successfully", data.data);
-  }
 
   const {
     error: errorState,
