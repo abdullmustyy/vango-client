@@ -2,7 +2,7 @@ import { Link, NavLink, Outlet, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { IGetVanDetail, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetHostVanDetail } from "../../Api";
+import { GetHostVanDetail } from "../../api";
 import Error from "../Error";
 import HostVanDetailSkeleton from "../Host/Skeletons/HostVanDetailSkeleton";
 import { useCallback } from "react";

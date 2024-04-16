@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetHostVans } from "../../Api";
+import { GetHostVans } from "../../api";
 import Error from "../../components/Error";
 import DashboardSkeleton from "../../components/Host/Skeletons/DashboardSkeleton";
 import { useCallback } from "react";

@@ -5,7 +5,7 @@ import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
 import { IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetVans } from "../../Api";
+import { GetVans } from "../../api";
 import VansFiltersSkeleton from "../../components/Vans/Skeletons/VansFiltersSkeleton";
 import VansShowcaseSkeleton from "../../components/Vans/Skeletons/VansShowcaseSkeleton";
 import Skeleton from "react-loading-skeleton";

@@ -1,7 +1,7 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { IGetVanDetail, IVan } from "../../utils/interfaces/van.interface";
-import { GetVanDetail } from "../../Api";
+import { GetVanDetail } from "../../api";
 import { useQuery } from "@tanstack/react-query";
 import "react-loading-skeleton/dist/skeleton.css";
 import VansDetailsSkeleton from "../../components/Vans/Skeletons/VansDetailsSkeleton";

@@ -1,6 +1,6 @@
 import Dropzone from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
-import { UploadProfileImage } from "../Api";
+import { UploadProfileImage } from "../api";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
 

@@ -11,7 +11,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import FileUploader from "../components/FileUploader";
 import { useCallback } from "react";
-import { RegisterUser } from "../Api";
+import { RegisterUser } from "../api";
 import { useMutation } from "@tanstack/react-query";
 
 const authSchema = Yup.object().shape({

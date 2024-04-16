@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { IGetVans, IVan } from "../../utils/interfaces/van.interface";
 import { useQuery } from "@tanstack/react-query";
-import { GetHostVans } from "../../Api";
+import { GetHostVans } from "../../api";
 import Error from "../../components/Error";
 import HostVansSkeleton from "../../components/Host/Skeletons/HostVansSkeleton";
 import { useCallback } from "react";
