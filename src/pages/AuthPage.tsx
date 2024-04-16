@@ -59,7 +59,11 @@ export default function AuthPage() {
     console.log("User registered successfully", data.data);
   }
 
-  const { error, pageType, imageUrl } = useAppSelector((state) => state.auth);
+  const {
+    error: errorState,
+    pageType,
+    imageUrl,
+  } = useAppSelector((state) => state.auth);
   const isSignIn = pageType === "signin";
   const isSignUp = pageType === "signup";
   const dispatch = useAppDispatch();
@@ -82,25 +86,32 @@ export default function AuthPage() {
         username,
         password,
       }: { name: string; email: string; username: string; password: string },
-      { resetForm }: { resetForm: () => void }
+      {
+        resetForm,
+        setSubmitting,
+      }: {
+        resetForm: () => void;
+        setSubmitting: (isSubmitting: boolean) => void;
+      }
     ) => {
       try {
         // Make the API call to register the user
         mutate(
           { name, imageUrl, email, username, password },
           {
-            onSuccess(data, variables, context) {
-              console.log("User registered successfully", data.data);
+            onSettled(_, error) {
+              if (error) {
+                dispatch(setError(error.message));
+              }
+
+              setSubmitting(false);
+            },
+            onSuccess() {
+              // Clear the form
               resetForm();
-              navigate(location.state?.from || "/", {
-                replace: true,
-              });
 
-              // // Clear the form
-              // resetForm();
-
-              // // Set the page type to sign in
-              // dispatch(setPageType("signin"));
+              // Set the page type to sign in
+              dispatch(setPageType("signin"));
             },
           }
         );
@@ -110,7 +121,7 @@ export default function AuthPage() {
         dispatch(setError(errorMessage));
       }
     },
-    [dispatch, imageUrl, location.state?.from, mutate, navigate]
+    [dispatch, imageUrl, mutate]
   );
 
   const signIn = useCallback(
@@ -217,9 +228,9 @@ export default function AuthPage() {
                 placeholder="Password"
                 label="Password"
               />
-              {error && (
+              {errorState && (
                 <h3 className="text-base text-center text-red-600 font-semibold">
-                  {error}
+                  {errorState}
                 </h3>
               )}
               <button
