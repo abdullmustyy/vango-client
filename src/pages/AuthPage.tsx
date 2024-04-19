@@ -2,42 +2,34 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setError, setImageUrl, setPageType } from "../state/authSlice";
-// Formik and Yup imports
-import * as Yup from "yup";
 import { Formik, Form, FormikHelpers } from "formik";
 import { MyTextInput } from "../components/FormItems";
-// Firebase imports
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
 import FileUploader from "../components/FileUploader";
 import { useCallback } from "react";
-import { registerUser as registerUser } from "../api";
+import { signInUser, signUpUser } from "../api";
 import { useMutation } from "@tanstack/react-query";
-
-const authSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("You have not provided a name.")
-    .min(4, "Name must have at least 4 characters."),
-  email: Yup.string()
-    .email("Invalid email address.")
-    .required("You have not provided an email."),
-  username: Yup.string()
-    .required("You have not provided a username.")
-    .min(4, "Username must have at least 4 characters."),
-  password: Yup.string()
-    .required("You have not provided a password.")
-    .min(8, "Password must have at least 8 characters.")
-    .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-});
-
-const authValues = {
-  name: "",
-  email: "",
-  username: "",
-  password: "",
-};
+import {
+  initialSignInValues,
+  initialSignUpValues,
+} from "../utils/constants/index.constant";
+import {
+  signInSchema,
+  signUpSchema,
+} from "../utils/validations/index.validation";
 
 export default function AuthPage() {
+  const {
+    error: errorState,
+    pageType,
+    imageUrl,
+  } = useAppSelector((state) => state.auth);
+  const isSignIn = pageType === "signin";
+  const isSignUp = pageType === "signup";
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Use the useMutation hook to register or login the user
   const { mutate } = useMutation({
     mutationKey: ["registerUser"],
     mutationFn: ({
@@ -52,19 +44,12 @@ export default function AuthPage() {
       email: string;
       username: string;
       password: string;
-    }) => registerUser(name, imageUrl, email, username, password),
+    }) => {
+      return isSignIn
+        ? signInUser(username, password)
+        : signUpUser(name, imageUrl, email, username, password);
+    },
   });
-
-  const {
-    error: errorState,
-    pageType,
-    imageUrl,
-  } = useAppSelector((state) => state.auth);
-  const isSignIn = pageType === "signin";
-  const isSignUp = pageType === "signup";
-  const dispatch = useAppDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
 
   // Upload profile image to Cloudinary on image drop and set the imageUrl in the state with the returned image URL
   const handleImageUpload = useCallback(
@@ -112,7 +97,6 @@ export default function AuthPage() {
           }
         );
       } catch (error) {
-        console.log("Error", error);
         const errorMessage = (error as Error).message;
         dispatch(setError(errorMessage));
       }
@@ -121,28 +105,51 @@ export default function AuthPage() {
   );
 
   const signIn = useCallback(
-    async (
-      { email, password }: { email: string; password: string },
-      resetForm: () => void
+    (
+      { username, password }: { username: string; password: string },
+      {
+        resetForm,
+        setSubmitting,
+      }: {
+        resetForm: () => void;
+        setSubmitting: (isSubmitting: boolean) => void;
+      }
     ) => {
       try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
+        // Make the API call to register the user
+        mutate(
+          {
+            username,
+            password,
+            name: "",
+            imageUrl: "",
+            email: "",
+          },
+          {
+            onSettled(_, error) {
+              if (error) {
+                dispatch(setError(error.message));
+              }
+
+              setSubmitting(false);
+            },
+            onSuccess() {
+              // Clear the form
+              resetForm();
+
+              // Redirect the user to the home page or the page they were trying to access
+              navigate(location.state?.from || "/", {
+                replace: true,
+              });
+            },
+          }
         );
-        console.log(userCredential.user);
-        resetForm();
-        navigate(location.state?.from || "/", {
-          replace: true,
-        });
       } catch (error) {
-        console.log("Error", error);
         const errorMessage = (error as Error).message;
         dispatch(setError(errorMessage));
       }
     },
-    [dispatch, location.state?.from, navigate]
+    [dispatch, location.state?.from, mutate, navigate]
   );
 
   const handleSubmit = useCallback(
@@ -167,7 +174,7 @@ export default function AuthPage() {
       if (isSignUp) {
         signUp(values, actions);
       } else {
-        signIn(values, actions.resetForm);
+        signIn(values, actions);
       }
     },
     [dispatch, isSignUp, signIn, signUp]
@@ -185,9 +192,23 @@ export default function AuthPage() {
           {isSignIn ? "Sign in to your account" : "Create an account"}
         </h1>
         <Formik
-          initialValues={authValues}
-          validationSchema={authSchema}
-          onSubmit={(values, actions) => handleSubmit(values, actions)}
+          initialValues={isSignUp ? initialSignUpValues : initialSignInValues}
+          validationSchema={isSignUp ? signUpSchema : signInSchema}
+          onSubmit={(values, actions) =>
+            handleSubmit(
+              {
+                name: "",
+                email: "",
+                ...values,
+              },
+              actions as FormikHelpers<{
+                name: string;
+                email: string;
+                username: string;
+                password: string;
+              }>
+            )
+          }
         >
           {({ isSubmitting, resetForm }) => (
             <Form className="grid gap-4">

@@ -28,17 +28,17 @@ export async function getVans() {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("Error while fetching vans: ", error.response.data);
+        console.error("Error while fetching vans: ", error.response.data);
         throw error.response.data; // Throw the error to ensure a value is returned
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Error while fetching vans: ", error.request);
+        console.error("Error while fetching vans: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
@@ -71,17 +71,17 @@ export async function getVanDetail(vanId: string) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("Error while fetching van detail: ", error.response.data);
+        console.error("Error while fetching van detail: ", error.response.data);
         throw error.response.data; // Throw the error to ensure a value is returned
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Error while fetching van detail: ", error.request);
+        console.error("Error while fetching van detail: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
@@ -95,17 +95,17 @@ export async function getHostVans() {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("Error while fetching host vans: ", error.response.data);
+        console.error("Error while fetching host vans: ", error.response.data);
         throw error.response.data; // Throw the error to ensure a value is returned
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Error while fetching host vans: ", error.request);
+        console.error("Error while fetching host vans: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
@@ -140,7 +140,7 @@ export async function getHostVanDetail(vanId: string) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log(
+        console.error(
           "Error while fetching host van detail: ",
           error.response.data
         );
@@ -149,11 +149,11 @@ export async function getHostVanDetail(vanId: string) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Error while fetching host van detail: ", error.request);
+        console.error("Error while fetching host van detail: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
@@ -170,23 +170,23 @@ export async function uploadProfileImage(image: File) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("Image upload error: ", error.response.data);
+        console.error("Image upload error: ", error.response.data);
         throw error.response.data; // Throw the error to ensure a value is returned
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Image upload error: ", error.request);
+        console.error("Image upload error: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
 }
 
-export async function registerUser(
+export async function signUpUser(
   name: string,
   imageUrl: string,
   email: string,
@@ -194,7 +194,7 @@ export async function registerUser(
   password: string
 ): Promise<IPostUser> {
   return axios
-    .post("/register", {
+    .post("/auth/signup", {
       name,
       imageUrl,
       email,
@@ -206,36 +206,48 @@ export async function registerUser(
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("Registration error: ", error.response.data);
+        console.error("Registration error: ", error.response.data);
         throw error.response.data; // Throw the error to ensure a value is returned
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("Registration error: ", error.request);
+        console.error("Registration error: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error: ", error.message);
+        console.error("Error: ", error.message);
         throw error.message; // Throw the error to ensure a value is returned
       }
     });
 }
 
-export async function loginUser(creds: { email: string; password: string }) {
-  const res = await fetch("/api/login", {
-    method: "post",
-    body: JSON.stringify(creds),
-  });
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw {
-      message: data.message,
-      statusText: res.statusText,
-      status: res.status,
-    };
-  }
-
-  return data;
+export async function signInUser(
+  username: string,
+  password: string
+): Promise<IPostUser> {
+  return axios
+    .post("/auth/signin", {
+      username,
+      password,
+    })
+    .then((userResponse) => userResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Signin error: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.error("Signin error: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
 }
