@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { error: null, pageType: "signin", imageUrl: "" };
+const initialState = {
+  error: null,
+  pageType: "signin",
+  imageUrl: "",
+  isLoggedIn: "false",
+};
 
 const authSlice = createSlice({
   name: "auth",
@@ -15,8 +20,12 @@ const authSlice = createSlice({
     setImageUrl(state, action) {
       state.imageUrl = action.payload;
     },
+    setLoggedIn(state, action) {
+      state.isLoggedIn = action.payload;
+    },
   },
 });
 
-export const { setError, setPageType, setImageUrl } = authSlice.actions;
+export const { setError, setPageType, setImageUrl, setLoggedIn } =
+  authSlice.actions;
 export default authSlice.reducer;

@@ -1,12 +1,28 @@
 import { NavLink } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { setLoggedIn } from "../state/authSlice";
+import { useCallback, useEffect } from "react";
 
 export default function NavBar() {
+  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      dispatch(setLoggedIn("true"));
+    }
+  }, [dispatch]);
+
+  // Log out the user and set the isLoggedIn state to false
+  const handleLogOut = useCallback(() => {
+    localStorage.setItem("isLoggedIn", "false");
+    dispatch(setLoggedIn("false"));
+  }, [dispatch]);
+
   const activeStyle = {
     color: "black",
     textDecoration: "underline",
   };
-
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   return (
     <nav className="py-4 md:px-0 px-4">
@@ -43,10 +59,7 @@ export default function NavBar() {
             Vans
           </NavLink>
           {isLoggedIn === "true" ? (
-            <button
-              type="button"
-              onClick={() => localStorage.setItem("isLoggedIn", "false")}
-            >
+            <button type="button" onClick={handleLogOut}>
               Log Out
             </button>
           ) : (

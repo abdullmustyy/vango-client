@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { setError, setImageUrl, setPageType } from "../state/authSlice";
+import {
+  setError,
+  setImageUrl,
+  setLoggedIn,
+  setPageType,
+} from "../state/authSlice";
 import { Formik, Form, FormikHelpers } from "formik";
 import { MyTextInput } from "../components/FormItems";
 import FileUploader from "../components/FileUploader";
@@ -128,7 +133,7 @@ export default function AuthPage() {
           {
             onSettled(_, error) {
               if (error) {
-                dispatch(setError(error.message));
+                dispatch(setError(error.message || error));
               }
 
               setSubmitting(false);
@@ -136,6 +141,10 @@ export default function AuthPage() {
             onSuccess() {
               // Clear the form
               resetForm();
+
+              // Set the user as logged in
+              localStorage.setItem("isLoggedIn", "true");
+              dispatch(setLoggedIn("true"));
 
               // Redirect the user to the home page or the page they were trying to access
               navigate(location.state?.from || "/", {
