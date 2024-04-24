@@ -223,12 +223,12 @@ export async function signUpUser(
 }
 
 export async function signInUser(
-  username: string,
+  usernameOrEmail: string,
   password: string
 ): Promise<IPostUser> {
   return axios
     .post("/auth/signin", {
-      username,
+      usernameOrEmail,
       password,
     })
     .then((userResponse) => userResponse.data)

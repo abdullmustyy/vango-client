@@ -16,11 +16,16 @@ import { useMutation } from "@tanstack/react-query";
 import {
   initialSignInValues,
   initialSignUpValues,
-} from "../utils/constants/index.constant";
+} from "../utils/constants/auth.constant";
 import {
   signInSchema,
   signUpSchema,
-} from "../utils/validations/index.validation";
+} from "../utils/validations/auth.validation";
+import {
+  IFormValues,
+  ISignInValues,
+  ISignUpValues,
+} from "../utils/interfaces/auth.interface";
 
 export default function AuthPage() {
   const {
@@ -42,16 +47,18 @@ export default function AuthPage() {
       imageUrl,
       email,
       username,
+      usernameOrEmail,
       password,
     }: {
       name: string;
       imageUrl: string;
       email: string;
       username: string;
+      usernameOrEmail: string;
       password: string;
     }) => {
       return isSignIn
-        ? signInUser(username, password)
+        ? signInUser(usernameOrEmail, password)
         : signUpUser(name, imageUrl, email, username, password);
     },
   });
@@ -66,24 +73,20 @@ export default function AuthPage() {
 
   const signUp = useCallback(
     (
-      {
-        name,
-        email,
-        username,
-        password,
-      }: { name: string; email: string; username: string; password: string },
-      {
-        resetForm,
-        setSubmitting,
-      }: {
-        resetForm: () => void;
-        setSubmitting: (isSubmitting: boolean) => void;
-      }
+      { name, email, username, password }: ISignUpValues,
+      { resetForm, setSubmitting }: FormikHelpers<ISignUpValues>
     ) => {
       try {
         // Make the API call to register the user
         mutate(
-          { name, imageUrl, email, username, password },
+          {
+            name,
+            imageUrl,
+            email,
+            username,
+            password,
+            usernameOrEmail: "",
+          },
           {
             onSettled(_, error) {
               if (error) {
@@ -111,24 +114,19 @@ export default function AuthPage() {
 
   const signIn = useCallback(
     (
-      { username, password }: { username: string; password: string },
-      {
-        resetForm,
-        setSubmitting,
-      }: {
-        resetForm: () => void;
-        setSubmitting: (isSubmitting: boolean) => void;
-      }
+      { usernameOrEmail, password }: ISignInValues,
+      { resetForm, setSubmitting }: FormikHelpers<ISignInValues>
     ) => {
       try {
         // Make the API call to register the user
         mutate(
           {
-            username,
+            usernameOrEmail,
             password,
             name: "",
             imageUrl: "",
             email: "",
+            username: "",
           },
           {
             onSettled(_, error) {
@@ -162,28 +160,21 @@ export default function AuthPage() {
   );
 
   const handleSubmit = useCallback(
-    (
-      values: {
-        name: string;
-        email: string;
-        username: string;
-        password: string;
-      },
-      actions: FormikHelpers<{
-        name: string;
-        email: string;
-        username: string;
-        password: string;
-      }>
-    ) => {
+    (values: IFormValues, actions: FormikHelpers<IFormValues>) => {
       // Clear the error state
       dispatch(setError(null));
 
       // Check if the user is signing up or signing in and call the appropriate function
       if (isSignUp) {
-        signUp(values, actions);
+        signUp(
+          values as ISignUpValues,
+          actions as FormikHelpers<ISignUpValues>
+        );
       } else {
-        signIn(values, actions);
+        signIn(
+          values as ISignInValues,
+          actions as FormikHelpers<ISignInValues>
+        );
       }
     },
     [dispatch, isSignUp, signIn, signUp]
@@ -203,21 +194,7 @@ export default function AuthPage() {
         <Formik
           initialValues={isSignUp ? initialSignUpValues : initialSignInValues}
           validationSchema={isSignUp ? signUpSchema : signInSchema}
-          onSubmit={(values, actions) =>
-            handleSubmit(
-              {
-                name: "",
-                email: "",
-                ...values,
-              },
-              actions as FormikHelpers<{
-                name: string;
-                email: string;
-                username: string;
-                password: string;
-              }>
-            )
-          }
+          onSubmit={(values, actions) => handleSubmit(values, actions)}
         >
           {({ isSubmitting, resetForm }) => (
             <Form className="grid gap-4">
@@ -236,18 +213,26 @@ export default function AuthPage() {
                   />
                   <MyTextInput
                     name="email"
-                    type="text"
+                    type="email"
                     placeholder="Email"
                     label="Email"
                   />
+                  <MyTextInput
+                    name="username"
+                    type="text"
+                    placeholder="Username"
+                    label="Username"
+                  />
                 </>
               )}
-              <MyTextInput
-                name="username"
-                type="text"
-                placeholder="Username"
-                label="Username"
-              />
+              {isSignIn && (
+                <MyTextInput
+                  name="usernameOrEmail"
+                  type="text"
+                  placeholder="Username or Email"
+                  label="Username or Email"
+                />
+              )}
               <MyTextInput
                 name="password"
                 type="password"

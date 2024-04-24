@@ -9,7 +9,11 @@ export const signUpSchema = Yup.object().shape({
     .required("You have not provided an email."),
   username: Yup.string()
     .required("You have not provided a username.")
-    .min(4, "Username must have at least 4 characters."),
+    .min(4, "Username must have at least 4 characters.")
+    .matches(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters and underscores."
+    ),
   password: Yup.string()
     .required("You have not provided a password.")
     .min(8, "Password must have at least 8 characters.")
@@ -17,9 +21,22 @@ export const signUpSchema = Yup.object().shape({
 });
 
 export const signInSchema = Yup.object().shape({
-  username: Yup.string()
-    .required("You have not provided a username.")
-    .min(4, "Username must have at least 4 characters."),
+  usernameOrEmail: Yup.string()
+    .required("You have not provided a username or email.")
+    .test(
+      "is-valid-username-or-email",
+      "Please enter a valid email, or a username with at least 4 characters.",
+      function (value) {
+        const isUsername = Yup.string()
+          .min(4, "Username must have at least 8 characters.")
+          .isValidSync(value);
+        const isEmail = Yup.string().email().isValidSync(value);
+
+        return value.includes("@") || value.includes(".")
+          ? isEmail
+          : isUsername;
+      }
+    ),
   password: Yup.string()
     .required("You have not provided a password.")
     .min(8, "Password must have at least 8 characters.")

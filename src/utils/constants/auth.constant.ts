@@ -6,6 +6,6 @@ export const initialSignUpValues = {
 };
 
 export const initialSignInValues = {
-  username: "",
+  usernameOrEmail: "",
   password: "",
 };
