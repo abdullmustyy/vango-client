@@ -1,5 +1,9 @@
-import axios from "./utils/configs/axios.config";
-import { IPostImage, IPostUser, IVerifyEmailAndOtp } from "./utils/interfaces/api.interface";
+import { axios } from "./utils/configs/axios.config";
+import {
+  IPostImage,
+  IPostUser,
+  IVerifyEmailAndOtp,
+} from "./utils/interfaces/api.interface";
 import { IGetVans, IGetVanDetail } from "./utils/interfaces/van.interface";
 
 export async function getVans() {
