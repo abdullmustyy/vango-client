@@ -1,25 +1,82 @@
 import { Formik, Form, FormikHelpers, Field, FieldProps } from "formik";
 import OTPInput from "react-otp-input";
 import { otpSchema } from "../utils/validations/auth.validation";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useCallback } from "react";
 import { IOtpValues } from "../utils/interfaces/auth.interface";
 import { initialOtpValues } from "../utils/constants/auth.constant";
+import { useMutation } from "@tanstack/react-query";
+import { verifyEmailAndOtp } from "../api";
+import { setError, setPageType } from "../state/authSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OtpPage = () => {
   const { error: errorState } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { mutate } = useMutation({
+    mutationKey: ["verifyEmailAndOtp"],
+    mutationFn: ({ email, otp }: { email: string; otp: string }) =>
+      verifyEmailAndOtp(email, otp),
+  });
 
   const handleSubmit = useCallback(
-    (values: IOtpValues, actions: FormikHelpers<IOtpValues>) => {
-      console.log(values, actions);
-      actions.setSubmitting(false);
+    (
+      { otp }: IOtpValues,
+      { setSubmitting, resetForm }: FormikHelpers<IOtpValues>
+    ) => {
+      try {
+        // Get the user's email from local storage
+        const email = localStorage.getItem("user-email") || "";
+
+        // Make the API call to register the user
+        mutate(
+          {
+            email,
+            otp,
+          },
+          {
+            onSettled(_, error) {
+              if (error) {
+                dispatch(setError(error.message));
+              }
+
+              setSubmitting(false);
+            },
+            onSuccess({ data }) {
+              // Clear the form
+              resetForm();
+
+              // Remove the user's email from local storage and store the token
+              localStorage.removeItem("user-email");
+              localStorage.setItem("access-token", data.accessToken);
+
+              // Set the page type to signin
+              dispatch(setPageType("signin"));
+
+              // Navigate to the auth page
+              navigate("/auth", { replace: true });
+            },
+          }
+        );
+      } catch (error) {
+        const errorMessage = (error as Error).message;
+        dispatch(setError(errorMessage));
+      }
     },
-    []
+    [dispatch, mutate, navigate]
   );
 
   return (
     <section className="container mx-auto md:grid place-content-center h-screen md:px-0 px-4 text-[#161616] select-text">
       <div className="md:w-[40rem] space-y-6">
+        {location.state?.message && (
+          <h3 className="text-base text-center font-semibold">
+            {location.state?.message}
+          </h3>
+        )}
         <h1 className="md:text-4xl text-2xl font-bold text-center">
           Enter OTP
         </h1>

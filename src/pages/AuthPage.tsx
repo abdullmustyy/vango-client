@@ -95,12 +95,19 @@ export default function AuthPage() {
 
               setSubmitting(false);
             },
-            onSuccess() {
+            onSuccess({ data }) {
               // Clear the form
               resetForm();
 
-              // Set the page type to sign in
-              dispatch(setPageType("signin"));
+              // Store the user's email to local storage
+              localStorage.setItem("user-email", data.email);
+
+              // Navigate to the OTP page
+              navigate("/otp", {
+                state: {
+                  message: `An OTP has been sent to ${data.email} for verification. Please enter the OTP to verify your email address.`,
+                },
+              });
             },
           }
         );
@@ -109,7 +116,7 @@ export default function AuthPage() {
         dispatch(setError(errorMessage));
       }
     },
-    [dispatch, imageUrl, mutate]
+    [dispatch, imageUrl, mutate, navigate]
   );
 
   const signIn = useCallback(
