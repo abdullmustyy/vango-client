@@ -70,7 +70,7 @@ const FileUploader = ({
                   />
                 </div>
                 <p className="file_uploader-label">
-                  Click or drag photo to replace.
+                  Click or drop photo to replace.
                 </p>
               </div>
             ) : (

@@ -19,6 +19,7 @@ import {
 } from "../pages/Host";
 import NotFoundPage from "../pages/NotFoundPage";
 import AuthPage from "../pages/AuthPage";
+import OtpPage from "../pages/OtpPage";
 // Layout components imports
 import Layout from "../components/Layout/Layout";
 import HostLayout from "../components/Layout/HostLayout";
@@ -31,6 +32,7 @@ export const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path="about" element={<AboutPage />} />
       <Route path="auth" element={<AuthPage />} />
+      <Route path="otp" element={<OtpPage />} />
       <Route path="vans" element={<VansPage />} />
       <Route path="vans/:id" element={<VansDetailsPage />} />
       {/* <Route element={<ProtectedRoutes />}> */}

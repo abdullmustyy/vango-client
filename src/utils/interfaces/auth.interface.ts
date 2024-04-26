@@ -1,3 +1,7 @@
+export interface IOtpValues {
+  otp: string;
+}
+
 export interface ISignUpValues {
   name: string;
   email: string;

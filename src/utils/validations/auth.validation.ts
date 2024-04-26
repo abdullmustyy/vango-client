@@ -42,3 +42,10 @@ export const signInSchema = Yup.object().shape({
     .min(8, "Password must have at least 8 characters.")
     .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
 });
+
+export const otpSchema = Yup.object().shape({
+  otp: Yup.string()
+    .required("You have not provided an OTP.")
+    .min(6, "OTP must have 6 characters.")
+    .matches(/^[0-9]+$/, "OTP can only contain numbers."),
+});

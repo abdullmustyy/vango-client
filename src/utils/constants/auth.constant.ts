@@ -1,3 +1,7 @@
+export const initialOtpValues = {
+  otp: "",
+};
+
 export const initialSignUpValues = {
   name: "",
   email: "",
