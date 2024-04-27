@@ -1,8 +1,8 @@
 import { axios } from "./utils/configs/axios.config";
 import {
+  IPostEmailAndOtp,
   IPostImage,
   IPostUser,
-  IVerifyEmailAndOtp,
 } from "./utils/interfaces/api.interface";
 import { IGetVans, IGetVanDetail } from "./utils/interfaces/van.interface";
 
@@ -229,7 +229,7 @@ export async function signUpUser(
 export async function verifyEmailAndOtp(
   email: string,
   otp: string
-): Promise<IVerifyEmailAndOtp> {
+): Promise<IPostEmailAndOtp> {
   return axios
     .post("/auth/verify", {
       email,

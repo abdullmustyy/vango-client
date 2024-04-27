@@ -29,7 +29,7 @@ const OtpPage = () => {
     ) => {
       try {
         // Get the user's email from local storage
-        const email = localStorage.getItem("user-email") || "";
+        const email = localStorage.getItem("userEmail") || "";
 
         // Make the API call to register the user
         mutate(
@@ -50,8 +50,8 @@ const OtpPage = () => {
               resetForm();
 
               // Remove the user's email from local storage and store the token
-              localStorage.removeItem("user-email");
-              localStorage.setItem("access-token", data.accessToken);
+              localStorage.removeItem("userEmail");
+              localStorage.setItem("accessToken", data.accessToken);
 
               // Set the page type to signin
               dispatch(setPageType("signin"));

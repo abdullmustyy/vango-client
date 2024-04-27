@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   setError,
   setImageUrl,
-  setLoggedIn,
+  setSignedIn,
   setPageType,
 } from "../state/authSlice";
 import { Formik, Form, FormikHelpers } from "formik";
@@ -100,7 +100,7 @@ export default function AuthPage() {
               resetForm();
 
               // Store the user's email to local storage
-              localStorage.setItem("user-email", data.email);
+              localStorage.setItem("userEmail", data.email);
 
               // Navigate to the OTP page
               navigate("/otp", {
@@ -143,13 +143,19 @@ export default function AuthPage() {
 
               setSubmitting(false);
             },
-            onSuccess() {
+            onSuccess({ data }) {
               // Clear the form
               resetForm();
 
               // Set the user as logged in
-              localStorage.setItem("isLoggedIn", "true");
-              dispatch(setLoggedIn("true"));
+              localStorage.setItem("isSignedIn", "true");
+              dispatch(setSignedIn("true"));
+
+              // Store the user's token in local storage
+              localStorage.setItem("accessToken", data.accessToken);
+
+              // Store the token expiry time in local storage
+              localStorage.setItem("exp", data.exp);
 
               // Redirect the user to the home page or the page they were trying to access
               navigate(location.state?.from || "/", {

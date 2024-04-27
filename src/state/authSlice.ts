@@ -4,7 +4,7 @@ const initialState = {
   error: null,
   pageType: "signin",
   imageUrl: "",
-  isLoggedIn: "false",
+  isSignedIn: "false",
 };
 
 const authSlice = createSlice({
@@ -20,12 +20,12 @@ const authSlice = createSlice({
     setImageUrl(state, action) {
       state.imageUrl = action.payload;
     },
-    setLoggedIn(state, action) {
-      state.isLoggedIn = action.payload;
+    setSignedIn(state, action) {
+      state.isSignedIn = action.payload;
     },
   },
 });
 
-export const { setError, setPageType, setImageUrl, setLoggedIn } =
+export const { setError, setPageType, setImageUrl, setSignedIn } =
   authSlice.actions;
 export default authSlice.reducer;

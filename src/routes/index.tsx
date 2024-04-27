@@ -24,7 +24,7 @@ import OtpPage from "../pages/OtpPage";
 import Layout from "../components/Layout/Layout";
 import HostLayout from "../components/Layout/HostLayout";
 import HostVanDetailLayout from "../components/Layout/HostVanDetailLayout";
-// import ProtectedRoutes from "./utils/authorize";
+import ProtectedRoutes from "../components/ProtectedRoutes";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,19 +35,19 @@ export const router = createBrowserRouter(
       <Route path="otp" element={<OtpPage />} />
       <Route path="vans" element={<VansPage />} />
       <Route path="vans/:id" element={<VansDetailsPage />} />
-      {/* <Route element={<ProtectedRoutes />}> */}
-      <Route path="host" element={<HostLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="income" element={<Income />} />
-        <Route path="reviews" element={<Reviews />} />
-        <Route path="vans" element={<HostVans />} />
-        <Route path="vans/:id" element={<HostVanDetailLayout />}>
-          <Route index element={<HostVanDetail />} />
-          <Route path="pricing" element={<HostPricing />} />
-          <Route path="photos" element={<HostVanPhotos />} />
+      <Route element={<ProtectedRoutes />}>
+        <Route path="host" element={<HostLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="income" element={<Income />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="vans" element={<HostVans />} />
+          <Route path="vans/:id" element={<HostVanDetailLayout />}>
+            <Route index element={<HostVanDetail />} />
+            <Route path="pricing" element={<HostPricing />} />
+            <Route path="photos" element={<HostVanPhotos />} />
+          </Route>
         </Route>
       </Route>
-      {/* </Route> */}
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

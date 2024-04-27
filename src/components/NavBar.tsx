@@ -1,22 +1,28 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { setLoggedIn } from "../state/authSlice";
+import { setSignedIn } from "../state/authSlice";
 import { useCallback, useEffect } from "react";
+import { localStorageAuthValues, logOut } from "../utils/auth.util";
 
 export default function NavBar() {
-  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { isSignedIn } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("isLoggedIn") === "true") {
-      dispatch(setLoggedIn("true"));
-    }
-  }, [dispatch]);
+    const { isSignedIn } = localStorageAuthValues();
 
-  // Log out the user and set the isLoggedIn state to false
+    if (isSignedIn === "true") {
+      dispatch(setSignedIn("true"));
+    }
+
+    navigate("/auth", { replace: true });
+  }, [dispatch, navigate]);
+
+  // Log out the user and set the isSignedIn state to false
   const handleLogOut = useCallback(() => {
-    localStorage.setItem("isLoggedIn", "false");
-    dispatch(setLoggedIn("false"));
+    logOut();
+    dispatch(setSignedIn("false"));
   }, [dispatch]);
 
   const activeStyle = {
@@ -58,7 +64,7 @@ export default function NavBar() {
           >
             Vans
           </NavLink>
-          {isLoggedIn === "true" ? (
+          {isSignedIn === "true" ? (
             <button type="button" onClick={handleLogOut}>
               Log Out
             </button>

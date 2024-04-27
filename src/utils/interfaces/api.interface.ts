@@ -12,11 +12,15 @@ export interface IPostUser {
   success: boolean;
   status: number;
   message: string;
-  data: { email: string };
+  data: {
+    email: string;
+    accessToken: string;
+    exp: string;
+  };
   timestamp: string;
 }
 
-export interface IVerifyEmailAndOtp {
+export interface IPostEmailAndOtp {
   success: boolean;
   status: number;
   message: string;
