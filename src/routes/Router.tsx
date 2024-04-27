@@ -26,7 +26,7 @@ import HostLayout from "../components/Layout/HostLayout";
 import HostVanDetailLayout from "../components/Layout/HostVanDetailLayout";
 import ProtectedRoutes from "../components/ProtectedRoutes";
 
-export const router = createBrowserRouter(
+export const  Router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<HomePage />} />

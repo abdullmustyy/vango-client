@@ -231,7 +231,7 @@ export async function verifyEmailAndOtp(
   otp: string
 ): Promise<IPostEmailAndOtp> {
   return axios
-    .post("/auth/verify", {
+    .post("/auth/otp/verify", {
       email,
       otp,
     })
@@ -247,6 +247,32 @@ export async function verifyEmailAndOtp(
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
         console.error("Email & Otp verification error: ", error.request);
+        throw error.request; // Throw the error to ensure a value is returned
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error: ", error.message);
+        throw error.message; // Throw the error to ensure a value is returned
+      }
+    });
+}
+
+export async function resendOtp(email: string): Promise<IPostEmailAndOtp> {
+  return axios
+    .post("/auth/otp/resend", {
+      email,
+    })
+    .then((otpResponse) => otpResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Otp resend error: ", error.response.data);
+        throw error.response.data; // Throw the error to ensure a value is returned
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.error("Otp resend error: ", error.request);
         throw error.request; // Throw the error to ensure a value is returned
       } else {
         // Something happened in setting up the request that triggered an Error

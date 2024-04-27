@@ -15,15 +15,15 @@ export default function NavBar() {
     if (isSignedIn === "true") {
       dispatch(setSignedIn("true"));
     }
-
-    navigate("/auth", { replace: true });
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   // Log out the user and set the isSignedIn state to false
   const handleLogOut = useCallback(() => {
     logOut();
     dispatch(setSignedIn("false"));
-  }, [dispatch]);
+
+    navigate("/auth", { replace: true });
+  }, [dispatch, navigate]);
 
   const activeStyle = {
     color: "black",

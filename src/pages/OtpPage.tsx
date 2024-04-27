@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { IOtpValues } from "../utils/interfaces/auth.interface";
 import { initialOtpValues } from "../utils/constants/auth.constant";
 import { useMutation } from "@tanstack/react-query";
-import { verifyEmailAndOtp } from "../api";
+import { resendOtp, verifyEmailAndOtp } from "../api";
 import { setError, setPageType } from "../state/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -16,10 +16,15 @@ const OtpPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { mutate } = useMutation({
+  const { mutate: mutateVerifyEmailAndOtp } = useMutation({
     mutationKey: ["verifyEmailAndOtp"],
     mutationFn: ({ email, otp }: { email: string; otp: string }) =>
       verifyEmailAndOtp(email, otp),
+  });
+
+  const { mutate: mutateResendOtp, isPending } = useMutation({
+    mutationKey: ["resendOtp"],
+    mutationFn: ({ email }: { email: string }) => resendOtp(email),
   });
 
   const handleSubmit = useCallback(
@@ -32,7 +37,7 @@ const OtpPage = () => {
         const email = localStorage.getItem("userEmail") || "";
 
         // Make the API call to register the user
-        mutate(
+        mutateVerifyEmailAndOtp(
           {
             email,
             otp,
@@ -53,6 +58,9 @@ const OtpPage = () => {
               localStorage.removeItem("userEmail");
               localStorage.setItem("accessToken", data.accessToken);
 
+              // Store the token expiry time in local storage
+              localStorage.setItem("exp", data.exp);
+
               // Set the page type to signin
               dispatch(setPageType("signin"));
 
@@ -66,8 +74,39 @@ const OtpPage = () => {
         dispatch(setError(errorMessage));
       }
     },
-    [dispatch, mutate, navigate]
+    [dispatch, mutateVerifyEmailAndOtp, navigate]
   );
+
+  const handleResendOtp = useCallback(() => {
+    try {
+      // Get the user's email from local storage
+      const email = localStorage.getItem("userEmail") || "";
+
+      // Make the API call to resend the OTP
+      mutateResendOtp(
+        {
+          email,
+        },
+        {
+          onSettled(_, error) {
+            if (error) {
+              dispatch(setError(error.message));
+            }
+          },
+          onSuccess(data) {
+            // Clear the error state
+            dispatch(setError(""));
+
+            // Alert the user that the OTP has been resent
+            alert(data.message);
+          },
+        }
+      );
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      dispatch(setError(errorMessage));
+    }
+  }, [dispatch, mutateResendOtp]);
 
   return (
     <section className="container mx-auto md:grid place-content-center h-screen md:px-0 px-4 text-[#161616] select-text">
@@ -89,7 +128,7 @@ const OtpPage = () => {
             <Form className="grid gap-4">
               <Field name="otp">
                 {({ meta }: FieldProps) => (
-                  <div className="space-y-4">
+                  <div className="grid gap-4">
                     <OTPInput
                       value={values.otp}
                       onChange={(otp: string) => setValues({ otp })}
@@ -108,6 +147,14 @@ const OtpPage = () => {
                         {meta.error}
                       </div>
                     )}
+                    {errorState && (
+                      <span
+                        onClick={handleResendOtp}
+                        className="text-sm font-medium place-self-center cursor-pointer hover:underline"
+                      >
+                        {isPending ? "Resending OTP..." : "Resend OTP"}
+                      </span>
+                    )}
                   </div>
                 )}
               </Field>
@@ -123,7 +170,7 @@ const OtpPage = () => {
                   isSubmitting ? "opacity-80 cursor-not-allowed" : null
                 } bg-[#FF8C38] w-32 rounded-md py-3 text-base font-bold text-white place-self-center hover:outline outline-2 outline-[#FF8C38] transition`}
               >
-                {isSubmitting ? "Sending..." : "Send"}
+                {isSubmitting ? "Verifying..." : "Verify"}
               </button>
             </Form>
           )}

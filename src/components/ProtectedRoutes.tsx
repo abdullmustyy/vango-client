@@ -13,7 +13,7 @@ export default function ProtectedRoutes() {
       to="/auth"
       state={{
         from: location.pathname,
-        message: `Session expired. Please sign in again.`,
+        message: `Session expired, please sign in again.`,
       }}
       replace
     />

@@ -29,6 +29,7 @@ export interface IPostEmailAndOtp {
     email: string;
     username: string;
     accessToken: string;
+    exp: string;
   };
   timestamp: string;
 }
