@@ -14,15 +14,26 @@ export const isUserSignedIn = () => {
   return isSignedIn === "true";
 };
 
+export const storeTokeAndExpiry = (accessToken: string, exp: string) => {
+  const expiry = moment().add(Number.parseInt(exp), "d").unix();
+
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("exp", expiry.toString());
+};
+
 export const isTokenExpired = () => {
-    const { exp } = localStorageAuthValues();
-    
-    if (!exp) return true;
-    
-    const now = moment();
-    const expiry = moment.unix(Number(exp));
-    
-    return now.isAfter(expiry);
+  const { exp } = localStorageAuthValues();
+
+  if (!exp) return true;
+
+  const now = moment();
+  const expiry = moment.unix(Number(exp));
+
+  return now.isAfter(expiry);
+};
+
+export const isUserAuthorized = () => {
+  return isUserSignedIn() && !isTokenExpired();
 };
 
 export const logOut = () => {

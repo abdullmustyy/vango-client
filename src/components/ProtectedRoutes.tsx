@@ -1,12 +1,12 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { isUserSignedIn, isTokenExpired } from "../utils/auth.util";
+import { isUserAuthorized } from "../utils/auth.util";
 
 export default function ProtectedRoutes() {
   const location = useLocation();
 
-  const isLoggedIn = isUserSignedIn() && !isTokenExpired();
+  const isSignedIn = isUserAuthorized();
 
-  return isLoggedIn ? (
+  return isSignedIn ? (
     <Outlet />
   ) : (
     <Navigate

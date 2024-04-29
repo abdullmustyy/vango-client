@@ -30,7 +30,9 @@ export const signInSchema = Yup.object().shape({
         const isUsername = Yup.string()
           .min(4, "Username must have at least 8 characters.")
           .isValidSync(value);
-        const isEmail = Yup.string().email().isValidSync(value);
+        const isEmail = Yup.string()
+          .email("Invalid email address.")
+          .isValidSync(value);
 
         return value.includes("@") || value.includes(".")
           ? isEmail

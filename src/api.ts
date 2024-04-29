@@ -30,20 +30,14 @@ export async function getVans() {
     })
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Error while fetching vans: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Error while fetching vans: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -73,20 +67,14 @@ export async function getVanDetail(vanId: string) {
     })
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Error while fetching van detail: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Error while fetching van detail: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -97,20 +85,14 @@ export async function getHostVans() {
     .then((hostVansResponse) => hostVansResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Error while fetching host vans: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Error while fetching host vans: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -142,23 +124,17 @@ export async function getHostVanDetail(vanId: string) {
     })
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error(
           "Error while fetching host van detail: ",
           error.response.data
         );
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Error while fetching host van detail: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -172,20 +148,14 @@ export async function uploadProfileImage(image: File) {
     .then((imageResponse) => imageResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Image upload error: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Image upload error: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -208,20 +178,14 @@ export async function signUpUser(
     .then((userResponse) => userResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Registration error: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Registration error: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -238,20 +202,14 @@ export async function verifyEmailAndOtp(
     .then((otpResponse) => otpResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Email & Otp verification error: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Email & Otp verification error: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -264,20 +222,14 @@ export async function resendOtp(email: string): Promise<IPostEmailAndOtp> {
     .then((otpResponse) => otpResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Otp resend error: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Otp resend error: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }
@@ -294,20 +246,14 @@ export async function signInUser(
     .then((userResponse) => userResponse.data)
     .catch((error) => {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error("Signin error: ", error.response.data);
-        throw error.response.data; // Throw the error to ensure a value is returned
+        throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.error("Signin error: ", error.request);
-        throw error.request; // Throw the error to ensure a value is returned
+        throw error.request;
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error("Error: ", error.message);
-        throw error.message; // Throw the error to ensure a value is returned
+        throw error.message;
       }
     });
 }

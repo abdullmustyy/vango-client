@@ -1,21 +1,13 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { setSignedIn } from "../state/authSlice";
-import { useCallback, useEffect } from "react";
-import { localStorageAuthValues, logOut } from "../utils/auth.util";
+import { useCallback } from "react";
+import { logOut } from "../utils/auth.util";
 
 export default function NavBar() {
   const { isSignedIn } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const { isSignedIn } = localStorageAuthValues();
-
-    if (isSignedIn === "true") {
-      dispatch(setSignedIn("true"));
-    }
-  }, [dispatch]);
 
   // Log out the user and set the isSignedIn state to false
   const handleLogOut = useCallback(() => {

@@ -26,6 +26,7 @@ import {
   ISignInValues,
   ISignUpValues,
 } from "../utils/interfaces/auth.interface";
+import { storeTokeAndExpiry } from "../utils/auth.util";
 
 export default function AuthPage() {
   const {
@@ -151,11 +152,8 @@ export default function AuthPage() {
               localStorage.setItem("isSignedIn", "true");
               dispatch(setSignedIn("true"));
 
-              // Store the user's token in local storage
-              localStorage.setItem("accessToken", data.accessToken);
-
-              // Store the token expiry time in local storage
-              localStorage.setItem("exp", data.exp);
+              // Store token and expiry in local storage
+              storeTokeAndExpiry(data.accessToken, data.exp);
 
               // Redirect the user to the home page or the page they were trying to access
               navigate(location.state?.from || "/", {
