@@ -1,5 +1,4 @@
 import { Formik, Form, FormikHelpers, Field, FieldProps } from "formik";
-import OTPInput from "react-otp-input";
 import { otpSchema } from "../utils/validations/auth.validation";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useCallback } from "react";
@@ -10,6 +9,7 @@ import { resendOtp, verifyEmailAndOtp } from "../api";
 import { setError, setPageType } from "../state/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { storeTokeAndExpiry } from "../utils/auth.util";
+import OtpInput from "@/components/OtpInput";
 
 const OtpPage = () => {
   const { error: errorState } = useAppSelector((state) => state.auth);
@@ -129,19 +129,7 @@ const OtpPage = () => {
               <Field name="otp">
                 {({ meta }: FieldProps) => (
                   <div className="grid gap-4">
-                    <OTPInput
-                      value={values.otp}
-                      onChange={(otp: string) => setValues({ otp })}
-                      numInputs={6}
-                      inputType="tel"
-                      inputStyle={
-                        "block text-center size-12 border border-gray-300 focus:border-[#FF8C38] focus:outline-none focus:ring ring-[#FF8C38]/50 rounded-md"
-                      }
-                      containerStyle={"flex justify-center gap-4"}
-                      skipDefaultStyles={true}
-                      shouldAutoFocus={true}
-                      renderInput={(props) => <input {...props} />}
-                    />
+                    <OtpInput otp={values.otp} setValues={setValues} />
                     {meta.touched && meta.error && (
                       <div className="text-sm text-red-600 text-center">
                         {meta.error}

@@ -2,7 +2,6 @@ import Dropzone from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
 import { uploadProfileImage } from "../api";
 import { useEffect, useState } from "react";
-import { Bounce, toast } from "react-toastify";
 
 const FileUploader = ({
   handleImageUpload,
@@ -23,17 +22,6 @@ const FileUploader = ({
     }
 
     if (isError) {
-      toast.error("🦄 Wow so easy!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
       setErrorMessage(error.message);
     }
   }, [data, error, handleImageUpload, isError, isSuccess]);

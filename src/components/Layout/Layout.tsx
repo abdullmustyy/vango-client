@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
-import { ToastContainer } from "react-toastify";
 import { isUserSignedIn } from "../../utils/auth.util";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../app/hooks";
@@ -20,7 +19,6 @@ export default function Layout() {
 
   return (
     <section>
-      <ToastContainer />
       <NavBar />
       <Outlet />
       <Footer />

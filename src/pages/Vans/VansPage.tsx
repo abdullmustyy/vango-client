@@ -73,11 +73,20 @@ export default function VansPage() {
 
   return (
     <section className="container mx-auto my-12 md:px-0 px-4 text-[#161616] min-h-screen">
-      <header className="mb12 space-y-2">
-        <h1 className="text-[2rem] font-semibold">Explore our van options</h1>
-        <p className="text-lg font-light">
-          Pick a van you&apos;ll like to rent by clicking on it.
-        </p>
+      <header className="mb12 flex justify-between items-center">
+        <div className="space-y-2">
+          <h1 className="text-[2rem] font-semibold">Explore our van options</h1>
+          <p className="text-lg font-light">
+            Pick a van you&apos;ll like to rent by clicking on it.
+          </p>
+        </div>
+        <button
+          type="button"
+          title="Create Van"
+          className=" bg-[#FF8C38] rounded-md p-2 text-base font-bold text-white hover:outline outline-2 outline-[#FF8C38] transition"
+        >
+          Create Van
+        </button>
       </header>
       {renderVansData(data ?? [])}
     </section>
