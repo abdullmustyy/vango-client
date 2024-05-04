@@ -4,10 +4,12 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 export interface VansState {
   filterOptions: { id: number; type: string; buttonStyle: string }[];
+  vanImageUrl: string;
 }
 
 const initialState: VansState = {
   filterOptions: [],
+  vanImageUrl: "",
 };
 
 const vansSlice = createSlice({
@@ -20,8 +22,11 @@ const vansSlice = createSlice({
     ) {
       state.filterOptions = action.payload;
     },
+    setVanImageUrl(state, action: PayloadAction<string>) {
+      state.vanImageUrl = action.payload;
+    },
   },
 });
 
-export const { setFilterOptions } = vansSlice.actions;
+export const { setFilterOptions, setVanImageUrl } = vansSlice.actions;
 export default vansSlice.reducer;

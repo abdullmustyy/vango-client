@@ -1,29 +1,26 @@
-export interface IPostImage {
+export interface IResponse {
   success: boolean;
   status: number;
   message: string;
-  data: {
-    imageUrl: string;
-  };
   timestamp: string;
 }
 
-export interface IPostUser {
-  success: boolean;
-  status: number;
-  message: string;
+export interface IPostImage extends IResponse {
   data: {
+    imageUrl: string;
+  };
+}
+
+export interface IPostUser extends IResponse {
+  data: {
+    userId: string;
     email: string;
     accessToken: string;
     exp: string;
   };
-  timestamp: string;
 }
 
-export interface IPostEmailAndOtp {
-  success: boolean;
-  status: number;
-  message: string;
+export interface IPostEmailAndOtp extends IResponse {
   data: {
     userId: string;
     email: string;
@@ -31,5 +28,4 @@ export interface IPostEmailAndOtp {
     accessToken: string;
     exp: string;
   };
-  timestamp: string;
 }

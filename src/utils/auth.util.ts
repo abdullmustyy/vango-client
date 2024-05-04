@@ -2,6 +2,7 @@ import moment from "moment";
 
 export const localStorageAuthValues = () => {
   return {
+    userId: localStorage.getItem("userId"),
     isSignedIn: localStorage.getItem("isSignedIn"),
     accessToken: localStorage.getItem("accessToken"),
     exp: localStorage.getItem("exp"),
@@ -14,9 +15,14 @@ export const isUserSignedIn = () => {
   return isSignedIn === "true";
 };
 
-export const storeTokeAndExpiry = (accessToken: string, exp: string) => {
+export const storeLocals = (
+  accessToken: string,
+  exp: string,
+  userId: string
+) => {
   const expiry = moment().add(Number.parseInt(exp), "d").unix();
 
+  localStorage.setItem("userId", userId);
   localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("exp", expiry.toString());
 };
@@ -37,7 +43,5 @@ export const isUserAuthorized = () => {
 };
 
 export const logOut = () => {
-  localStorage.removeItem("isSignedIn");
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("exp");
+  localStorage.clear();
 };

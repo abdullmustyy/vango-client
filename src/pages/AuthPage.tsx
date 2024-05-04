@@ -26,7 +26,7 @@ import {
   ISignInValues,
   ISignUpValues,
 } from "../utils/interfaces/auth.interface";
-import { storeTokeAndExpiry } from "../utils/auth.util";
+import { storeLocals } from "../utils/auth.util";
 
 export default function AuthPage() {
   const {
@@ -145,6 +145,8 @@ export default function AuthPage() {
               setSubmitting(false);
             },
             onSuccess({ data }) {
+              const { accessToken, exp, userId } = data;
+
               // Clear the form
               resetForm();
 
@@ -153,7 +155,7 @@ export default function AuthPage() {
               dispatch(setSignedIn("true"));
 
               // Store token and expiry in local storage
-              storeTokeAndExpiry(data.accessToken, data.exp);
+              storeLocals(accessToken, exp, userId);
 
               // Redirect the user to the home page or the page they were trying to access
               navigate(location.state?.from || "/", {
@@ -221,6 +223,7 @@ export default function AuthPage() {
                     handleImageUpload={(imageUrl: string) =>
                       handleImageUpload(imageUrl)
                     }
+                    uploadTo="profile"
                   />
                   <MyTextInput
                     name="email"

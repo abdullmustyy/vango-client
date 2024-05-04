@@ -8,7 +8,6 @@ import { useMutation } from "@tanstack/react-query";
 import { resendOtp, verifyEmailAndOtp } from "../api";
 import { setError, setPageType } from "../state/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import { storeTokeAndExpiry } from "../utils/auth.util";
 import OtpInput from "@/components/OtpInput";
 
 const OtpPage = () => {
@@ -51,15 +50,12 @@ const OtpPage = () => {
 
               setSubmitting(false);
             },
-            onSuccess({ data }) {
+            onSuccess() {
               // Clear the form
               resetForm();
 
               // Remove the user's email from local storage
               localStorage.removeItem("userEmail");
-
-              // Store token and expiry in local storage
-              storeTokeAndExpiry(data.accessToken, data.exp);
 
               // Set the page type to signin
               dispatch(setPageType("signin"));

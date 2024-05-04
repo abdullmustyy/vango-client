@@ -110,3 +110,14 @@ img {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

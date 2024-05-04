@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 export default function HomePage() {
   return (
     <section className="home overflow-x-hidden font-inter">
-      <main className="hero h-screen grid place-content-center">
-        <div className="text-white break-words flex flex-col space-y-10 md:px-0 px-4 container mx-auto">
+      <main className="hero  container mx-auto h-screen grid place-content-center">
+        <div className="text-white break-words flex flex-col space-y-10 md:px-0 px-4">
           <h1 className="text-6xl font-extrabold">
             You got the travel plans, we got the travel vans.
           </h1>

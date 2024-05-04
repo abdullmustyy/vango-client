@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setFilterOptions } from "../../state/vansSlice";
 import VansFilters from "../../components/Vans/VansFilters";
 import VansShowcase from "../../components/Vans/VansShowcase";
@@ -11,10 +11,12 @@ import VansShowcaseSkeleton from "../../components/Vans/Skeletons/VansShowcaseSk
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Error from "../../components/Error";
+import { CreateVan } from "@/components/Vans/CreateVan";
 
 export const VansContext = createContext({} as { vansData: IVan[] });
 
 export default function VansPage() {
+  const { isSignedIn } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const { data, error, isPending, isError } = useQuery({
@@ -61,7 +63,7 @@ export default function VansPage() {
 
     return (
       <>
-        <main>
+        <main className="container mx-auto">
           <VansFilters />
           <VansContext.Provider value={{ vansData }}>
             <VansShowcase />
@@ -72,21 +74,15 @@ export default function VansPage() {
   };
 
   return (
-    <section className="container mx-auto my-12 md:px-0 px-4 text-[#161616] min-h-screen">
-      <header className="mb12 flex justify-between items-center">
+    <section className="my-12 md:px-0 px-4 text-[#161616] min-h-screen">
+      <header className="container mx-auto mb12 flex justify-between items-center">
         <div className="space-y-2">
           <h1 className="text-[2rem] font-semibold">Explore our van options</h1>
           <p className="text-lg font-light">
             Pick a van you&apos;ll like to rent by clicking on it.
           </p>
         </div>
-        <button
-          type="button"
-          title="Create Van"
-          className=" bg-[#FF8C38] rounded-md p-2 text-base font-bold text-white hover:outline outline-2 outline-[#FF8C38] transition"
-        >
-          Create Van
-        </button>
+        {isSignedIn === "true" && <CreateVan />}
       </header>
       {renderVansData(data ?? [])}
     </section>

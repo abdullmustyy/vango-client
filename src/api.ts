@@ -4,7 +4,12 @@ import {
   IPostImage,
   IPostUser,
 } from "./utils/interfaces/api.interface";
-import { IGetVans, IGetVanDetail } from "./utils/interfaces/van.interface";
+import {
+  IGetVans,
+  IGetVanDetail,
+  TCreateVan,
+  IPostVan,
+} from "./utils/interfaces/van.interface";
 
 export async function getVans() {
   return axios
@@ -139,12 +144,51 @@ export async function getHostVanDetail(vanId: string) {
     });
 }
 
+export async function createVan(van: TCreateVan) {
+  return axios
+    .post<IPostVan>("/vans", van)
+    .then((vanResponse) => vanResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        console.error("Error while creating van: ", error.response.data);
+        throw error.response.data;
+      } else if (error.request) {
+        console.error("Error while creating van: ", error.request);
+        throw error.request;
+      } else {
+        console.error("Error: ", error.message);
+        throw error.message;
+      }
+    });
+}
+
 export async function uploadProfileImage(image: File) {
   const form = new FormData();
   form.append("image", image);
 
   return axios
     .post<IPostImage>("/upload-image", form)
+    .then((imageResponse) => imageResponse.data)
+    .catch((error) => {
+      if (error.response) {
+        console.error("Image upload error: ", error.response.data);
+        throw error.response.data;
+      } else if (error.request) {
+        console.error("Image upload error: ", error.request);
+        throw error.request;
+      } else {
+        console.error("Error: ", error.message);
+        throw error.message;
+      }
+    });
+}
+
+export async function uploadVanImage(image: File) {
+  const form = new FormData();
+  form.append("image", image);
+
+  return axios
+    .post<IPostImage>("/vans/image", form)
     .then((imageResponse) => imageResponse.data)
     .catch((error) => {
       if (error.response) {

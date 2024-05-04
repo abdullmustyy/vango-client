@@ -1,3 +1,5 @@
+import { IResponse } from "./api.interface";
+
 export interface vansInterface {
   id: string;
   name: string;
@@ -5,7 +7,7 @@ export interface vansInterface {
   price: number;
   type: string;
   imageUrl: string;
-  hostID: string;
+  hostId: string;
   buttonStyle: string;
 }
 
@@ -14,7 +16,7 @@ export interface vansDetailsInterface extends vansInterface {
 }
 
 export interface IVan {
-  id: string;
+  vanId: string;
   name: string;
   description: string;
   price: number;
@@ -26,19 +28,24 @@ export interface IVan {
   createdAt: string;
 }
 
-export interface IGetVans {
-  success: boolean;
-  status: number;
-  message: string;
+export interface IGetVans extends IResponse {
   data: IVan[];
-  timestamp: string;
 }
 
-export interface IGetVanDetail {
-  success: boolean;
-  status: number;
-  message: string;
+export interface IGetVanDetail extends IResponse {
   data: IVan;
-  timestamp: string;
   typeBg: string;
 }
+
+export interface IPostVan extends IResponse {
+  data: IVan;
+}
+
+export interface ICreateVanValues {
+  name: string;
+  description: string;
+  price: number;
+  type: string;
+}
+
+export type TCreateVan = Omit<vansInterface, "id" | "buttonStyle">;

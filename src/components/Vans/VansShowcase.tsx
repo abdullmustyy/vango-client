@@ -15,12 +15,12 @@ export default function VansShowcase() {
     <div className="grid grid-cols-2 sm:gap-12 gap-6">
       {vansProcessedData.map((data) => (
         <Link
-          to={data.id}
+          to={data.vanId}
           state={{
             search: searchParams.toString(),
             values: typeFilter,
           }}
-          key={data.id}
+          key={data.vanId}
         >
           <div className="flex flex-col sm:space-y-4 space-y-2 shadow-inner">
             <div className="rounded-lg outline outline-[#4D4D4D] outline-offset-1 outline-[1px]">

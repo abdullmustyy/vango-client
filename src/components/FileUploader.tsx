@@ -1,17 +1,22 @@
 import Dropzone from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
-import { uploadProfileImage } from "../api";
+import { uploadProfileImage, uploadVanImage } from "../api";
 import { useEffect, useState } from "react";
 
 const FileUploader = ({
   handleImageUpload,
+  uploadTo,
 }: {
   handleImageUpload: (imageUrl: string) => void;
+  uploadTo: "profile" | "van";
 }) => {
   // Mutation hook
   const { data, mutate, isPending, isSuccess, isError, error } = useMutation({
-    mutationKey: ["uploadProfileImage"],
-    mutationFn: (image: File) => uploadProfileImage(image),
+    mutationKey: ["uploadProfileOrVanImage"],
+    mutationFn: (image: File) =>
+      uploadTo === "profile"
+        ? uploadProfileImage(image)
+        : uploadVanImage(image),
   });
   // State declarations
   const [errorMessage, setErrorMessage] = useState("");

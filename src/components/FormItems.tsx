@@ -28,3 +28,28 @@ export const MyTextInput = ({
     </div>
   );
 };
+
+export const MyTextArea = ({
+  label,
+  ...props
+}: {
+  label: string;
+  name: string;
+  placeholder: string;
+  id?: string;
+}) => {
+  const [field, meta] = useField(props);
+  return (
+    <div className="flex flex-col">
+      {label && <label htmlFor={props.id || props.name}>{label}</label>}
+      <textarea
+        className="block w-full border border-gray-300 focus:border-[#FF8C38] p-2 focus:outline-none focus:ring ring-[#FF8C38]/50 rounded-md"
+        {...field}
+        {...props}
+      />
+      {meta.touched && meta.error ? (
+        <div className="text-sm text-red-600">{meta.error}</div>
+      ) : null}
+    </div>
+  );
+};
