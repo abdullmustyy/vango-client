@@ -21,16 +21,21 @@ import { ICreateVanValues, TCreateVan } from "@/utils/interfaces/van.interface";
 import { localStorageAuthValues } from "@/utils/auth.util";
 import { useToast } from "../ui/use-toast";
 import { DialogClose } from "@/components/ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
+import { setError } from "@/state/authSlice";
 
 export function CreateVan() {
+  const { error: errorState } = useAppSelector((state) => state.auth);
   const { vanImageUrl } = useAppSelector((state) => state.vans);
   const dispatch = useAppDispatch();
-  const { toast } = useToast();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { mutate } = useMutation({
     mutationKey: ["createVan"],
     mutationFn: (van: TCreateVan) => createVan(van),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["vans"] }),
   });
 
   const handleImageUpload = useCallback(
@@ -61,9 +66,11 @@ export function CreateVan() {
             onSettled(_, error) {
               if (error) {
                 toast({
-                  message: error.message,
+                  title: error.message,
                 });
               }
+
+              dispatch(setError(error?.message));
 
               setSubmitting(false);
             },
@@ -71,9 +78,10 @@ export function CreateVan() {
               resetForm();
 
               toast({
-                message: "Van created successfully",
-                variant: "success",
+                title: "Van created successfully",
               });
+
+              // queryClient.invalidateQueries({ queryKey: ["vans"] });
 
               buttonRef.current?.click();
             },
@@ -82,11 +90,11 @@ export function CreateVan() {
       } catch (error) {
         const errorMessage = (error as Error).message;
         toast({
-          message: errorMessage,
+          title: errorMessage,
         });
       }
     },
-    [buttonRef, mutate, toast, vanImageUrl]
+    [dispatch, mutate, toast, vanImageUrl]
   );
 
   return (
@@ -143,11 +151,11 @@ export function CreateVan() {
                 placeholder="Type"
                 label="Type"
               />
-              {/* {errorState && (
+              {errorState && (
                 <h3 className="text-base text-center text-red-600 font-semibold">
                   {errorState}
                 </h3>
-              )} */}
+              )}
               <DialogFooter>
                 <button
                   type="submit"
