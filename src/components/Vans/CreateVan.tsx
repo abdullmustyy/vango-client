@@ -81,8 +81,6 @@ export function CreateVan() {
                 title: "Van created successfully",
               });
 
-              // queryClient.invalidateQueries({ queryKey: ["vans"] });
-
               buttonRef.current?.click();
             },
           }

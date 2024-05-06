@@ -27,10 +27,10 @@ export default function HostVans() {
     <div className="grid grid-cols-1 gap-6 pt-6">
       {hostVans.map((vanData) => (
         <div
-          key={vanData.id}
+          key={vanData.vanId}
           className="flex bg-white items-center gap-6 p-6 rounded-lg shadow-sm"
         >
-          <Link to={vanData.id}>
+          <Link to={vanData.vanId}>
             <img
               src={vanData.imageUrl}
               alt={vanData.name}
@@ -44,7 +44,7 @@ export default function HostVans() {
             </span>
           </div>
           <Link
-            to={vanData.id}
+            to={vanData.vanId}
             className="ml-auto text-sm font-semibold hover:underline"
           >
             Details

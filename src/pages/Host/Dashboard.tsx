@@ -28,7 +28,7 @@ export default function Dashboard() {
     const hostVansEls = vans.map((van) => (
       <div
         className="bg-white flex items-center gap-6 p-6 rounded-lg shadow-sm"
-        key={van.id}
+        key={van.vanId}
       >
         <img
           src={van.imageUrl}
@@ -40,7 +40,7 @@ export default function Dashboard() {
           <p className="text-base font-semibold">${van.price}/day</p>
         </div>
         <Link
-          to={`vans/${van.id}`}
+          to={`vans/${van.vanId}`}
           className="ml-auto text-sm font-semibold hover:underline"
         >
           View
