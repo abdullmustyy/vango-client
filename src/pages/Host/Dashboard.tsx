@@ -6,11 +6,14 @@ import { getHostVans } from "../../api";
 import Error from "../../components/Error";
 import DashboardSkeleton from "../../components/Host/Skeletons/DashboardSkeleton";
 import { useCallback } from "react";
+import { localStorageAuthValues } from "@/utils/auth.util";
 
 export default function Dashboard() {
+  const { userId } = localStorageAuthValues();
+
   const { data, isPending, error, isError } = useQuery({
-    queryKey: ["hostVans"],
-    queryFn: getHostVans,
+    queryKey: ["hostVans", userId],
+    queryFn: ({ queryKey }) => getHostVans(queryKey[1] as string),
     select: useCallback((data: IGetVans) => {
       return data.data;
     }, []),

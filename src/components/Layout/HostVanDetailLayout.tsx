@@ -6,13 +6,15 @@ import { getHostVanDetail } from "../../api";
 import Error from "../Error";
 import HostVanDetailSkeleton from "../Host/Skeletons/HostVanDetailSkeleton";
 import { useCallback } from "react";
+import { localStorageAuthValues } from "@/utils/auth.util";
 
 export default function HostVanDetailLayout() {
   const { id } = useParams();
+  const { userId } = localStorageAuthValues();
 
   const { data, error, isFetching, isError } = useQuery({
-    queryKey: ["hostVanDetails"],
-    queryFn: () => getHostVanDetail(id ?? ""),
+    queryKey: ["hostVanDetails", userId],
+    queryFn: () => getHostVanDetail(id ?? "", userId as string),
     select: useCallback((data: IGetVanDetail) => {
       return data.data;
     }, []),

@@ -5,11 +5,14 @@ import { getHostVans } from "../../api";
 import Error from "../../components/Error";
 import HostVansSkeleton from "../../components/Host/Skeletons/HostVansSkeleton";
 import { useCallback } from "react";
+import { localStorageAuthValues } from "@/utils/auth.util";
 
 export default function HostVans() {
+  const { userId } = localStorageAuthValues();
+
   const { data, isPending, error, isError } = useQuery({
-    queryKey: ["hostVans"],
-    queryFn: getHostVans,
+    queryKey: ["hostVans", userId],
+    queryFn: ({ queryKey }) => getHostVans(queryKey[1] as string),
     select: useCallback((data: IGetVans) => {
       return data.data;
     }, []),

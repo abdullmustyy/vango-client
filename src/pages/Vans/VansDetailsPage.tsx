@@ -29,7 +29,7 @@ export default function VansDetailsPage() {
   }
 
   const renderVanDetails = (vanDetails: IVan) => (
-    <main className="my-10 grid sm:grid-cols-2 gap-10">
+    <main className="container mx-auto my-10 grid sm:grid-cols-2 gap-10">
       <section className="md:my-8">
         <div
           className={`outline-${vanDetails.typeBg} rounded-full max-w-2xl outline outline-offset-1 outline-[1px]`}
@@ -68,8 +68,8 @@ export default function VansDetailsPage() {
   );
 
   return (
-    <section className="container mx-auto text-[#201F1D] sm:px-0 px-4">
-      <header className="my-8">
+    <section className="text-[#201F1D] sm:px-0 px-4">
+      <header className="container mx-auto my-8">
         <Link
           to={state.search ? `..?${state.search}` : ".."}
           relative="path"

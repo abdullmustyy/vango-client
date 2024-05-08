@@ -84,9 +84,9 @@ export async function getVanDetail(vanId: string) {
     });
 }
 
-export async function getHostVans() {
+export async function getHostVans(userId: string) {
   return axios
-    .get<IGetVans>(`/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans`)
+    .get<IGetVans>(`/host/${userId}/vans`)
     .then((hostVansResponse) => hostVansResponse.data)
     .catch((error) => {
       if (error.response) {
@@ -102,11 +102,9 @@ export async function getHostVans() {
     });
 }
 
-export async function getHostVanDetail(vanId: string) {
+export async function getHostVanDetail(vanId: string, userId: string) {
   return axios
-    .get<IGetVanDetail>(
-      `/host/b8a06866-3e78-41d5-b060-dffc1c98b55e/vans/${vanId}`
-    )
+    .get<IGetVanDetail>(`/host/${userId}/vans/${vanId}`)
     .then((hostVanResponse) => {
       let data = hostVanResponse.data;
 
