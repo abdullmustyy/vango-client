@@ -10,7 +10,7 @@ const VansDetailsSkeleton = () => {
       <main className="my-10 grid sm:grid-cols-2 gap-10">
         <section className="md:my-8">
           <div
-            className={`rounded-full max-w-2xl outline outline-offset-1 outline-[1px]`}
+            className={`rounded-full max-w-2xl`}
           >
             <Skeleton circle={true} width={492} height={492} />
           </div>

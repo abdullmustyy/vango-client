@@ -23,7 +23,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="py-4 md:px-0 px-4">
+    <nav className="py-4 md:px-0">
       <div className="container mx-auto flex justify-between">
         <div>
           <NavLink
